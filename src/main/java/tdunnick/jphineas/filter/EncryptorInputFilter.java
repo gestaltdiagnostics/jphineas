@@ -19,11 +19,10 @@
 
 package tdunnick.jphineas.filter;
 
-import java.io.*;
+import java.io.InputStream;
 
 import tdunnick.jphineas.config.XmlConfig;
 import tdunnick.jphineas.encryption.XmlEncryptor;
-import tdunnick.jphineas.xml.*;
 
 /**
  * Perform encryption as a InputStream filter.  Pass just the <Encryption>

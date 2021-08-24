@@ -21,7 +21,6 @@ package tdunnick.jphineas.sender;
 
 import tdunnick.jphineas.config.RouteConfig;
 import tdunnick.jphineas.logging.Log;
-import tdunnick.jphineas.xml.*;
 
 /**
  * A domain class to parse and provide route information to various parts

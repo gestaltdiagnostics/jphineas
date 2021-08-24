@@ -19,19 +19,22 @@
 
 package tdunnick.jphineas.sender.ebxml;
 
-import java.io.*;
-import java.net.*;
-//import org.bouncycastle.crypto.digests.*;
-//import org.bouncycastle.util.encoders.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
-import tdunnick.jphineas.logging.Log;
-import tdunnick.jphineas.mime.*;
-import tdunnick.jphineas.sender.*;
-import tdunnick.jphineas.util.SocketFactory;
-import tdunnick.jphineas.queue.*;
-import tdunnick.jphineas.xml.*;
 import tdunnick.jphineas.config.RouteConfig;
-import tdunnick.jphineas.ebxml.*;
+import tdunnick.jphineas.ebxml.EbXmlRequest;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.mime.MimeContent;
+import tdunnick.jphineas.mime.MimeReceiver;
+import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.sender.RouteProcessor;
+import tdunnick.jphineas.util.SocketFactory;
+import tdunnick.jphineas.xml.SoapXml;
 
 /**
  * This is the route processor for ebXML (standard PHINMS) outgoing messages.

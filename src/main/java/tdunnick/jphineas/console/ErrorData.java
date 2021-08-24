@@ -19,8 +19,13 @@
 
 package tdunnick.jphineas.console;
 
-import java.util.*;
-import tdunnick.jphineas.logging.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.logging.LogContext;
 
 /**
  * Generates the error object for display to user.

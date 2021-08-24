@@ -22,7 +22,7 @@ package tdunnick.jphineas.config;
 import java.io.File;
 
 import tdunnick.jphineas.logging.Log;
-import tdunnick.jphineas.receiver.*;
+import tdunnick.jphineas.receiver.ReceiverProcessor;
 
 public class ServiceConfig extends ReceiverConfig
 {

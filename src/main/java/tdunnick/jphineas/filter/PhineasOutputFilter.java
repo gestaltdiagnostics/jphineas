@@ -19,10 +19,12 @@
 
 package tdunnick.jphineas.filter;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.xml.*;
 
 /**
  * A general purpose output filter.  Subclasses need to implements process ()

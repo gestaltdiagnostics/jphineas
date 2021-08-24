@@ -19,11 +19,15 @@
 
 package tdunnick.jphineas.queue;
 
-import java.util.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.logging.*;
+import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.util.DateFmt;
 
 /**

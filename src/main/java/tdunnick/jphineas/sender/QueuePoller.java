@@ -19,14 +19,17 @@
 
 package tdunnick.jphineas.sender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import tdunnick.jphineas.config.FolderConfig;
 import tdunnick.jphineas.config.SenderConfig;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.queue.*;
-import tdunnick.jphineas.util.*;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.queue.PhineasQ;
+import tdunnick.jphineas.queue.PhineasQManager;
+import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.util.PriorityBlockingQ;
+import tdunnick.jphineas.util.Pthread;
 
 /**
  * The Queue poller periodically checks transport queues for PhinmsQRow records to send.

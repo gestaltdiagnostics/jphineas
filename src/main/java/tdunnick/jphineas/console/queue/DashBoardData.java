@@ -19,9 +19,11 @@
 
 package tdunnick.jphineas.console.queue;
 
-import java.util.*;
-import java.text.*;
-import java.io.*;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 
 /**

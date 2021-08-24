@@ -19,8 +19,9 @@
 
 package tdunnick.jphineas.console.config;
 
-import java.util.*;
-import tdunnick.jphineas.common.*;
+import java.util.ArrayList;
+
+import tdunnick.jphineas.common.JPhineas;
 
 /**
  * This is the data object passed to the configuration JSP and includes the

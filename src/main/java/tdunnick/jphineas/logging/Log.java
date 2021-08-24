@@ -19,12 +19,14 @@
 
 package tdunnick.jphineas.logging;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.io.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import tdunnick.jphineas.config.LogConfig;
-import tdunnick.jphineas.xml.*;
 
 
 /**

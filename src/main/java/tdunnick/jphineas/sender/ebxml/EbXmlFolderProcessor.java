@@ -19,16 +19,21 @@
 
 package tdunnick.jphineas.sender.ebxml;
 
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 
 import tdunnick.jphineas.config.FolderConfig;
-import tdunnick.jphineas.filter.*;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.queue.*;
-import tdunnick.jphineas.sender.*;
-import tdunnick.jphineas.util.*;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.queue.PhineasQ;
+import tdunnick.jphineas.queue.PhineasQManager;
+import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.sender.FolderProcessor;
+import tdunnick.jphineas.util.ProcessID;
 
 /**
  * Visit various folders in the sender's map configuration and queue up 

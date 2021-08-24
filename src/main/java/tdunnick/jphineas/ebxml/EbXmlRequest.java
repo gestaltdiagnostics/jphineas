@@ -19,14 +19,17 @@
 
 package tdunnick.jphineas.ebxml;
 
-import java.io.*;
+import java.io.File;
 
 import tdunnick.jphineas.config.RouteConfig;
 import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.queue.PhineasQRow;
-import tdunnick.jphineas.util.*;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.util.Chunker;
+import tdunnick.jphineas.util.DateFmt;
+import tdunnick.jphineas.util.ProcessID;
+import tdunnick.jphineas.xml.ResponseXml;
+import tdunnick.jphineas.xml.SoapXml;
 
 /**
  * Packages an ebXML request for the sender.  Note there are several "ID's" in a request

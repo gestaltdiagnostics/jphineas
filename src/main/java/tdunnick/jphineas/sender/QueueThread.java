@@ -19,10 +19,13 @@
 
 package tdunnick.jphineas.sender;
 
-import java.util.*;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.queue.*;
-import tdunnick.jphineas.util.*;
+import java.util.HashMap;
+
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.util.DateFmt;
+import tdunnick.jphineas.util.PriorityBlockingQ;
+import tdunnick.jphineas.util.Pthread;
 
 /**
  * A Queue PThread.

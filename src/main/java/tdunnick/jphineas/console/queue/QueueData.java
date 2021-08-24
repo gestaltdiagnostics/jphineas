@@ -19,8 +19,8 @@
 
 package tdunnick.jphineas.console.queue;
 
-import java.util.*;
-import java.io.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * A Java Bean used for the queue view

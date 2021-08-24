@@ -19,7 +19,7 @@
 
 package tdunnick.jphineas.console.queue;
 
-import tdunnick.jphineas.util.*;
+import tdunnick.jphineas.util.Cache;
 
 public class DashBoardCache
 {

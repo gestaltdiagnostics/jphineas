@@ -19,8 +19,6 @@
 
 package tdunnick.jphineas.util;
 
-import java.util.*;
-
 public class ByteArray
 {
 	public final static byte[] insert (byte[] b1, byte[] b2, int start)

@@ -19,10 +19,9 @@
 
 package tdunnick.jphineas.sender;
 
-import java.io.*;
+import java.io.File;
 
 import tdunnick.jphineas.config.FolderConfig;
-import tdunnick.jphineas.xml.*;
 
 /**
  * The processing class called by the folder poller.  This class performs whatever

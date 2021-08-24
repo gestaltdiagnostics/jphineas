@@ -19,11 +19,13 @@
 
 package tdunnick.jphineas.mime;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 
-import tdunnick.jphineas.logging.*;
+import tdunnick.jphineas.logging.Log;
 
 /**
  * Read an incoming message in Mime format.  This may be coming from either

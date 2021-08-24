@@ -21,15 +21,18 @@
 package tdunnick.jphineas.console.queue
 ;
 
-import java.util.*;
-import javax.servlet.http.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import tdunnick.jphineas.common.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.queue.*;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.xml.*;
-import tdunnick.jphineas.util.*;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.queue.PhineasQ;
+import tdunnick.jphineas.queue.PhineasQManager;
+import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.util.DateFmt;
 
 /**
  * This is the model that prepares data for display of queues

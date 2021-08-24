@@ -19,20 +19,36 @@
 
 package tdunnick.jphineas.encryption;
 
-import java.util.*;
-import java.io.*;
-import javax.naming.*;
-import javax.naming.directory.*;
-import java.security.*;
-import java.security.cert.*;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Random;
 
-import javax.crypto.*;
-import javax.crypto.spec.*;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
-import org.bouncycastle.util.encoders.*;
 import org.bouncycastle.util.encoders.Base64;
 
-import tdunnick.jphineas.logging.*;
+import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.util.ByteArray;
 
 

@@ -19,7 +19,10 @@
 
 package tdunnick.jphineas.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * A simple data cache with a time-to-live.  The cache gets cleaned on 

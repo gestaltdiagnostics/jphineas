@@ -19,23 +19,37 @@
 
 package tdunnick.jphineas.console.queue;
 
-import java.io.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Paint;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.awt.*;
-import java.awt.image.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.jfree.chart.*;
-import org.jfree.chart.axis.*;
-import org.jfree.chart.plot.*;
-import org.jfree.chart.urls.*;
-import org.jfree.chart.renderer.category.*;
-import org.jfree.data.category.*;
-import org.jfree.data.general.*;
-import org.jfree.data.xy.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartRenderingInfo;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.DefaultDrawingSupplier;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.urls.StandardPieURLGenerator;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
-import tdunnick.jphineas.logging.*;
+import tdunnick.jphineas.logging.Log;
 
 public class Charts
 {		

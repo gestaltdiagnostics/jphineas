@@ -19,13 +19,14 @@
 
 package tdunnick.jphineas.queue;
 
-import java.util.*;
-import java.io.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import tdunnick.jphineas.config.LogConfig;
 import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.logging.Log;
 /**
  * Doles out PhineasQ's which may be shared by multiple threads.  Queues are identified
  * in a single configuration file, so that all processes share the same set of 

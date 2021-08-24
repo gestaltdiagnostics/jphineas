@@ -19,13 +19,12 @@
 
 package tdunnick.jphineas.sender;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
 
-import tdunnick.jphineas.xml.*;
 import tdunnick.jphineas.config.SenderConfig;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.util.*;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.util.Pthread;
 
 /**
  * Visit various folders in the sender's folder configurations and process any

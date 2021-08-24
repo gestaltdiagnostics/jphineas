@@ -19,8 +19,11 @@
 
 package tdunnick.jphineas.mime;
 
-import java.util.*;
-import org.bouncycastle.util.encoders.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import org.bouncycastle.util.encoders.Base64;
 
 /**

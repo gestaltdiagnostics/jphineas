@@ -19,7 +19,8 @@
 
 package tdunnick.jphineas.util;
 
-import java.util.*;
+import java.util.Date;
+
 public class ProcessID
 {
   static long processId = 0;

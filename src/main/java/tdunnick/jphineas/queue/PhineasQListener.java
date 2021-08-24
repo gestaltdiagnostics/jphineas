@@ -19,12 +19,9 @@
 
 package tdunnick.jphineas.queue;
 
-import java.io.File;
-
-import javax.servlet.*;
-
-import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.logging.Log;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 
 /**

@@ -19,9 +19,16 @@
 
 package tdunnick.jphineas.logging;
 
-import java.util.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 
 /**
  * A logging configuration for Phineas.

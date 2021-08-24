@@ -19,9 +19,9 @@
 package tdunnick.jphineas.receiver;
 
 
-import tdunnick.jphineas.xml.*;
 import tdunnick.jphineas.config.ServiceConfig;
-import tdunnick.jphineas.mime.*;
+import tdunnick.jphineas.mime.MimeContent;
+import tdunnick.jphineas.xml.SoapXml;
 
 /**
  * The processing class called by the receiver based on the service/action found

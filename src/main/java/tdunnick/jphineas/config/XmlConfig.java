@@ -21,10 +21,10 @@ package tdunnick.jphineas.config;
 
 import java.io.File;
 import java.io.InputStream;
-import org.w3c.dom.*;
+
+import org.w3c.dom.Element;
 
 import tdunnick.jphineas.logging.Log;
-import tdunnick.jphineas.sender.FolderProcessor;
 import tdunnick.jphineas.xml.XmlContent;
 
 /**

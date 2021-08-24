@@ -19,7 +19,7 @@
 
 package tdunnick.jphineas.console.config;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Data used by the JSP view to construct on TAB in the configuration GUI.  A

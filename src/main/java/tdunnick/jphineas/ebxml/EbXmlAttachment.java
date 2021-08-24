@@ -20,17 +20,12 @@
 package tdunnick.jphineas.ebxml;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import tdunnick.jphineas.encryption.XmlEncryptor;
-import tdunnick.jphineas.filter.PhineasOutputFilter;
 import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
-import tdunnick.jphineas.queue.PhineasQRow;
-import tdunnick.jphineas.xml.EncryptionXml;
 
 /**
  * manage payload attachments

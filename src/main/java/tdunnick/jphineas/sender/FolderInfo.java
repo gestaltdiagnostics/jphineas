@@ -19,11 +19,10 @@
 
 package tdunnick.jphineas.sender;
 
-import java.io.*;
+import java.io.File;
 
 import tdunnick.jphineas.config.FolderConfig;
 import tdunnick.jphineas.logging.Log;
-import tdunnick.jphineas.xml.*;
 
 /**
  * General information expected by the folder poller.  This is typically extended

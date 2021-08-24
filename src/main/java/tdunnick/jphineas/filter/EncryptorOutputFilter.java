@@ -22,10 +22,8 @@ package tdunnick.jphineas.filter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.jfree.util.Log;
-
 import tdunnick.jphineas.encryption.XmlEncryptor;
-import tdunnick.jphineas.xml.XmlContent;
+import tdunnick.jphineas.logging.Log;
 
 /**
  * Perform encryption as a OutputStream filter.  Pass just the <Encryption>

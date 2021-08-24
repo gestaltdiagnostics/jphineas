@@ -19,9 +19,14 @@
 
 package tdunnick.jphineas.console.logs;
 
-import java.util.*;
-import javax.servlet.http.*;
-import tdunnick.jphineas.logging.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import javax.servlet.http.HttpServletRequest;
+
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.logging.LogContext;
 
 public class LogModel
 {

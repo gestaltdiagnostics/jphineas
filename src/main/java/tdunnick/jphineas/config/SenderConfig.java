@@ -19,7 +19,7 @@
 
 package tdunnick.jphineas.config;
 
-import tdunnick.jphineas.logging.*;
+import tdunnick.jphineas.logging.Log;
 
 public class SenderConfig extends PhineasConfig
 {

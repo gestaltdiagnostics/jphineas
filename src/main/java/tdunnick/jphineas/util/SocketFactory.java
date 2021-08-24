@@ -18,14 +18,23 @@
  */
 package tdunnick.jphineas.util;
 
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import javax.net.ssl.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.Socket;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 import tdunnick.jphineas.config.RouteConfig;
 import tdunnick.jphineas.logging.Log;
-import tdunnick.jphineas.xml.*;
 
 /**
  * Set up a trust manager and open a sockets based on the protocol 

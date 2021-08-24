@@ -20,10 +20,10 @@
 package tdunnick.jphineas.sender.ebxml;
 
 import tdunnick.jphineas.config.FolderConfig;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.queue.*;
-import tdunnick.jphineas.util.*;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.queue.PhineasQ;
+import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.util.ProcessID;
 
 /**
  * Manages ebXML sender queue

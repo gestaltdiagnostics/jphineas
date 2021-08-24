@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import tdunnick.jphineas.encryption.XmlEncryptor;
-import tdunnick.jphineas.xml.XmlContent;
 
 /**
  * Perform decryption as an OutputStream filter.  The xml configuration

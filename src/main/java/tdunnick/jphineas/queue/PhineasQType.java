@@ -19,10 +19,10 @@
 
 package tdunnick.jphineas.queue;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.xml.*;
 
 /**
  * The queue type holds what amounts to meta-data for a type of queue.  The

@@ -19,8 +19,10 @@
 
 package tdunnick.jphineas.console.config;
 
-import java.util.*;
-import tdunnick.jphineas.logging.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import tdunnick.jphineas.logging.Log;
 
 /**
  * Data used by the JSP view to render inputs in the configuration GUI

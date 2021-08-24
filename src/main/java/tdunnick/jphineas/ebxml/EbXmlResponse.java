@@ -19,16 +19,14 @@
 
 package tdunnick.jphineas.ebxml;
 
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.Date;
 
-import tdunnick.jphineas.util.*;
 import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.filter.PhineasOutputFilter;
 import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.util.DateFmt;
+import tdunnick.jphineas.xml.SoapXml;
 
 public class EbXmlResponse
 {

@@ -19,11 +19,6 @@
 
 package tdunnick.jphineas.queue;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import tdunnick.jphineas.common.JPhineas;
-
 /**
  * This is used to pass around and manipulate one queue entry.  The methods
  * are persistence agnostic, with the details hidden within the implementation of the

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.xml.*;
 
 /**
  * This is a generic filter intended to be configured by XML.  

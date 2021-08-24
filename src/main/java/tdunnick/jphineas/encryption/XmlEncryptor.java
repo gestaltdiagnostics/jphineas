@@ -19,11 +19,12 @@
 
 package tdunnick.jphineas.encryption;
 
-import java.io.*;
-import java.security.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.security.Key;
 
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.xml.EncryptionXml;
 
 /**
  * A PHINMS payload container consists of an XML wrapper holding information about

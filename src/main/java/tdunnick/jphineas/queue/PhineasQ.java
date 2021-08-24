@@ -19,8 +19,9 @@
 
 package tdunnick.jphineas.queue;
 
-import java.util.*;
-import tdunnick.jphineas.logging.*;
+import java.util.ArrayList;
+
+import tdunnick.jphineas.logging.Log;
 
 /**
  * A PhineasQ is shared among all users of that queue.  It provides the glue

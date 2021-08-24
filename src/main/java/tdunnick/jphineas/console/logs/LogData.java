@@ -22,7 +22,7 @@ package tdunnick.jphineas.console.logs;
 import java.util.ArrayList;
 
 import tdunnick.jphineas.common.JPhineas;
-import tdunnick.jphineas.logging.*;
+import tdunnick.jphineas.logging.LogContext;
 
 public class LogData
 {

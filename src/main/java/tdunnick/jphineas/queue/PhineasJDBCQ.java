@@ -19,12 +19,15 @@
 
 package tdunnick.jphineas.queue;
 
-import java.util.*;
-import java.io.*;
-import java.sql.*;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
-import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.logging.*;
+import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.util.DateFmt;
 
 /**

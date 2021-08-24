@@ -19,13 +19,14 @@
 
 package tdunnick.jphineas.sender.file;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import tdunnick.jphineas.config.RouteConfig;
-import tdunnick.jphineas.logging.*;
-import tdunnick.jphineas.queue.*;
-import tdunnick.jphineas.sender.*;
-import tdunnick.jphineas.xml.*;
+import tdunnick.jphineas.logging.Log;
+import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.sender.RouteProcessor;
 
 public class FileRouteProcessor extends RouteProcessor
 {

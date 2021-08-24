@@ -19,10 +19,10 @@
 
 package tdunnick.jphineas.receiver;
 
-import tdunnick.jphineas.mime.*;
-import tdunnick.jphineas.xml.*;
 import tdunnick.jphineas.config.ServiceConfig;
-import tdunnick.jphineas.ebxml.*;
+import tdunnick.jphineas.ebxml.EbXmlResponse;
+import tdunnick.jphineas.mime.MimeContent;
+import tdunnick.jphineas.xml.SoapXml;
 
 /**
  * This processor generates responses for ebXML PING requests.

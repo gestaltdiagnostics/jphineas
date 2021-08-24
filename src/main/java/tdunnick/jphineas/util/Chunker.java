@@ -19,9 +19,10 @@
 
 package tdunnick.jphineas.util;
 
-import java.io.*;
-
-import org.jfree.util.Log;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * A simple set of static methods to implement file chunking.  Incoming chunks 

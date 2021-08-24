@@ -19,7 +19,7 @@
 
 package tdunnick.jphineas.sender;
 import tdunnick.jphineas.config.RouteConfig;
-import tdunnick.jphineas.queue.*;
+import tdunnick.jphineas.queue.PhineasQRow;
 
 /**
  * The processing class called by the queue poller (thread).  This class performs whatever
