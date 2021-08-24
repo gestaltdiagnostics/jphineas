@@ -30,6 +30,7 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 
 import org.bouncycastle.util.encoders.*;
+import org.bouncycastle.util.encoders.Base64;
 
 import tdunnick.jphineas.logging.*;
 import tdunnick.jphineas.util.ByteArray;

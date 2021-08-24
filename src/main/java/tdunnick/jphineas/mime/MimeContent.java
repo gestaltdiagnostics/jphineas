@@ -21,6 +21,7 @@ package tdunnick.jphineas.mime;
 
 import java.util.*;
 import org.bouncycastle.util.encoders.*;
+import org.bouncycastle.util.encoders.Base64;
 
 /**
  * Mime content management.
