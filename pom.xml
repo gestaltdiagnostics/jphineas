@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>jphineas</artifactId>
 	<groupId>com.gestaltdiagnostics</groupId>
 	<version>1.0-SNAPSHOT</version>
 
 	<name>JPHIN Server</name>
+	<packaging>pom</packaging>
+
+	<modules>
+	  <module>server</module>
+	  <module>core</module>
+    </modules>
 
 	<dependencies>
 		<dependency>
@@ -36,11 +40,8 @@
 			<artifactId>jcommon</artifactId>
 			<version>1.0.17</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>javax.servlet.jsp.jstl</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>javax.servlet.jsp.jstl</groupId> <artifactId>jstl</artifactId> 
+			<version>1.2</version> </dependency> -->
 		<dependency>
 			<groupId>org.sitemesh</groupId>
 			<artifactId>sitemesh</artifactId>
