@@ -18,29 +18,33 @@
  */
 
 package tdunnick.jphineas.sender;
+
 import tdunnick.jphineas.config.RouteConfig;
-import tdunnick.jphineas.queue.PhineasQRow;
+import tdunnick.jphineas.ebxml.EbXmlRequest;
+import tdunnick.jphineas.xml.ResponseXml;
 
 /**
- * The processing class called by the queue poller (thread).  This class performs whatever
- * function may be needed on the queue row.  The common case of course is to transmit
- * the payload to some destination
+ * The processing class called by the queue poller (thread). This class performs
+ * whatever function may be needed on the queue row. The common case of course
+ * is to transmit the payload to some destination
  * 
  * @author tld
  *
  */
-public abstract class RouteProcessor
-{
+public abstract class RouteProcessor {
 	/**
 	 * Configure this processor
-	 * @param config for this Route 
+	 * 
+	 * @param config for this Route
 	 * @return true if successful
 	 */
-	protected abstract boolean configure (RouteConfig config);
-  /**
-   * Do any requested processing on this queue row
-   * @param row to process
-   * @return true if successful
-   */
-  protected abstract boolean process (PhineasQRow row);
+	protected abstract boolean configure(RouteConfig config);
+
+	/**
+	 * Do any requested processing on this queue row
+	 * 
+	 * @param req to process
+	 * @return true if successful
+	 */
+	protected abstract ResponseXml process(EbXmlRequest req);
 }
