@@ -61,11 +61,12 @@ public class EbXmlRouteProcessor extends RouteProcessor {
 	 * @return ResponseXml if successful
 	 * @see tdunnick.jphineas.sender.RouteProcessor#process(tdunnick.jphineas.queue.PhineasQRow)
 	 */
-	public ResponseXml process(RouteConfig config, EbXmlRequest ebReq) {
+	public ResponseXml process(EbXmlRequest ebReq) {
+		ebReq.setRouteConfig(config);
 		ResponseXml xml = null;
 
 		// get a soap request for this row
-		SoapXml soap = ebReq.getSoapRequest(config);
+		SoapXml soap = ebReq.getSoapRequest();
 		// check for basic authentication
 		String authid = null;
 		String pw = config.getAuthenticationType();

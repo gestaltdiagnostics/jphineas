@@ -20,6 +20,8 @@
 package tdunnick.jphineas.ebxml;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import tdunnick.jphineas.config.RouteConfig;
@@ -44,7 +46,7 @@ import tdunnick.jphineas.xml.SoapXml;
 public class EbXmlRequest {
 
 	/** remote party ID */
-	//private String partyId = null;
+	private String partyId = null;
 	/** my party ID */
 	private String hostId = null;
 	/** my host domain */
@@ -66,7 +68,7 @@ public class EbXmlRequest {
 	private String publicKeyLdapBaseDn;
 	private String publicKeyLdapDn;
 
-	private ByteBuffer payload;
+	private ByteBuffer messageContent;
 
 	/**
 	 * Configure an ebXML request based on the route
@@ -74,14 +76,13 @@ public class EbXmlRequest {
 	 * @param config - the Sender configuration for this Route.
 	 */
 	public EbXmlRequest(String service, String action, String recordId, String arguments,
-			String messageRecipient, String certificateUrl) {
-		this(service, action, recordId, arguments, messageRecipient, null, null, null);
+			String messageRecipient, String certificateUrl, String message) {
+		this(service, action, recordId, arguments, messageRecipient, null, null, null, message);
 		this.certificateUrl = certificateUrl;
 	}
 
 	public EbXmlRequest(String service, String action, String recordId, String arguments,
-			String messageRecipient, String publicKeyLdapAddress, String publicKeyLdapBaseDn, String publicKeyLdapDn) {
-
+			String messageRecipient, String publicKeyLdapAddress, String publicKeyLdapBaseDn, String publicKeyLdapDn, String message) {
 		this.service = service;
 		this.action = action;
 		this.recordId = recordId;
@@ -90,6 +91,20 @@ public class EbXmlRequest {
 		this.publicKeyLdapAddress = publicKeyLdapAddress;
 		this.publicKeyLdapBaseDn = publicKeyLdapBaseDn;
 		this.publicKeyLdapDn = publicKeyLdapDn;
+		this.messageContent = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * Sets the RouteConfig specific elements
+	 * @param config an instance of RouteConfig
+	 */
+	public void setRouteConfig(RouteConfig config) {
+		partyId = config.getPartyId();
+		hostId = config.getHostId();
+		domain = config.getDomain();
+		cpa = config.getCpa();
+		organization = config.getOrganization();
+		chunkSize = config.getChunkSize();
 	}
 
 	/**
@@ -98,19 +113,12 @@ public class EbXmlRequest {
 	 * @param q queue for this request
 	 * @return the SOAP XML
 	 */
-	public SoapXml getSoapRequest(RouteConfig config) {
-		//partyId = config.getPartyId();
-		hostId = config.getHostId();
-		domain = config.getDomain();
-		cpa = config.getCpa();
-		organization = config.getOrganization();
-		chunkSize = config.getChunkSize();
-
+	public SoapXml getSoapRequest() {
 		SoapXml soap = new SoapXml();
 
 		// soap header
 		soap.setFromPartyId(hostId);
-		soap.setToPartyId(config.getPartyId());
+		soap.setToPartyId(partyId);
 		soap.setCPAId(cpa);
 		soap.setConversationId(ProcessID.get());
 		soap.setService(service);
@@ -200,13 +208,13 @@ public class EbXmlRequest {
 		}
 
 		String ref = UUID.randomUUID().toString();
-		if (setChunk(soap, Chunker.needed(payload, chunkSize))) {
+		if (setChunk(soap, Chunker.needed(messageContent, chunkSize))) {
 			ref = Integer.toString(soap.getPart()) + "_" + soap.getConversationId();
 		}
 		soap.setManifestReference("cid:" + ref + "@" + organization);
 
 		EbXmlAttachment p = new EbXmlAttachment();
-		p.setPayload(Chunker.getBytes(payload, soap.getPart(), chunkSize));
+		p.setPayload(Chunker.getBytes(messageContent, soap.getPart(), chunkSize));
 		p.setId(ref + "@" + organization);
 		p.setName(ref);
 		if (certificateUrl == null) {
@@ -224,7 +232,7 @@ public class EbXmlRequest {
 	 */
 	public MimeContent getMessagePackage(SoapXml soap) {
 		MimeContent mimeContent = null;
-		if ((payload != null) && ((mimeContent = getPayloadContainer(soap)) == null)) {
+		if ((messageContent != null) && ((mimeContent = getPayloadContainer(soap)) == null)) {
 			return null;
 		}
 		MimeContent hdr = getHeaderContainer(soap);
