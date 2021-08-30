@@ -21,11 +21,14 @@ package tdunnick.jphineas.config;
 
 import java.io.File;
 
-import tdunnick.jphineas.logging.Log;
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.receiver.ReceiverProcessor;
 
 public class ServiceConfig extends ReceiverConfig
 {
+	private static final Logger LOG = Logger.getLogger(ServiceConfig.class);
+
 	boolean init ()
 	{
 		if (!super.init ())
@@ -38,7 +41,7 @@ public class ServiceConfig extends ReceiverConfig
 		{
 			if (getValue (tags[i]) == null)
 			{
-				Log.error ("Service Map missing value for " + tags[i]);
+				LOG.error ("Service Map missing value for " + tags[i]);
 				return false;
 			}
 		}

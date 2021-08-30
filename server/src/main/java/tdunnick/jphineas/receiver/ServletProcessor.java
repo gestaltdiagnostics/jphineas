@@ -25,11 +25,12 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.config.ServiceConfig;
 import tdunnick.jphineas.ebxml.EbXmlAppResponse;
 import tdunnick.jphineas.ebxml.EbXmlResponse;
 import tdunnick.jphineas.encryption.XmlEncryptor;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.mime.MimeReceiver;
 import tdunnick.jphineas.util.SocketFactory;
@@ -46,7 +47,9 @@ public class ServletProcessor extends ReceiverProcessor
 {
   ServiceConfig config = null;
   
-	/**
+  private static final Logger LOG = Logger.getLogger(ServletProcessor.class);
+
+  /**
 	 * Simply save the configuration
 	 * @param config to save
 	 * @see tdunnick.jphineas.receiver.ReceiverProcessor#configure(tdunnick.jphineas.config.ServiceConfig)
@@ -57,7 +60,7 @@ public class ServletProcessor extends ReceiverProcessor
 		String s = config.getQueue();
 		if (s == null)
 		{
-			Log.error ("Receiver Queue not specified");
+			LOG.error ("Receiver Queue not specified");
 			return false;
 		}
 		return true;
@@ -122,25 +125,25 @@ public class ServletProcessor extends ReceiverProcessor
    	// now ready to send it off
   	try
   	{
-			Log.debug("sending EbXml request:\n" + req + mime.toString());
+			LOG.debug("sending EbXml request:\n" + req + mime.toString());
 			OutputStream out = socket.getOutputStream();
 			InputStream in = socket.getInputStream();
   		out.write(req.getBytes());
 			out.write(mime.toString().getBytes());
 			out.flush();
-			Log.debug("waiting for reply");
+			LOG.debug("waiting for reply");
 			MimeContent msg = MimeReceiver.receive (in);
 			// TODO digest authentication response?
 			out.close();
 			in.close();
 			socket.close();
 			// finally parse the reply and update our row
-		  Log.debug ("response:\n" + msg.toString());
+		  LOG.debug ("response:\n" + msg.toString());
 		  return msg.getMultiParts();
   	}
   	catch (Exception e)
   	{
-  		Log.error("Failed sending EbXML message", e);
+  		LOG.error("Failed sending EbXML message", e);
   	}
 		return null;
 	}

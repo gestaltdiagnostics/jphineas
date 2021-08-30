@@ -22,9 +22,9 @@ package tdunnick.jphineas.config;
 import java.io.File;
 import java.io.InputStream;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.xml.XmlContent;
 
 /**
@@ -54,8 +54,10 @@ public class XmlConfig extends XmlContent
 
 	/** a default directory prefix for folders and files */
   public final static String DEFAULTDIR = "DefaultDirectory";
-  
- 	/**
+
+  private static final Logger LOG = Logger.getLogger(XmlConfig.class);
+ 
+  /**
    * Load an XML document from a file and set dfltDir
    * @param file to read from
    * @return true if successful
@@ -160,7 +162,7 @@ public class XmlConfig extends XmlContent
 		  	return f;
 		  e = getParentElement (e);
 		}
-  	Log.debug ("Can't find " + pre);
+  	LOG.debug ("Can't find " + pre);
   	return null;
   }
   
@@ -182,7 +184,7 @@ public class XmlConfig extends XmlContent
 			if ((s != null) && s.equals(name))
 				return f;
 		}
-		// Log.debug ("pre=" + pre + " name=" + name + " not found!");
+		// LOG.debug ("pre=" + pre + " name=" + name + " not found!");
 		return null;
 	}
    
@@ -204,7 +206,7 @@ public class XmlConfig extends XmlContent
 			c.prefix = root;
 		if (!c.init ())
 		{
-			Log.debug("Failed initializing " + c.getClass().getName());
+			LOG.debug("Failed initializing " + c.getClass().getName());
 			return null;
 		}
 		return (c);
@@ -228,7 +230,7 @@ public class XmlConfig extends XmlContent
   	Element e = getElement (pre);
   	if (e == null)
   	{
-    	Log.debug ("Can't find " + pre);
+    	LOG.debug ("Can't find " + pre);
   		return null;
   	}
   	return copy (c, e);
@@ -270,7 +272,7 @@ public class XmlConfig extends XmlContent
 		}
 		catch (ClassNotFoundException e)
 		{
-			Log.error("Class " + cname + " not found");
+			LOG.error("Class " + cname + " not found");
 			return null;
 		}
 	}
@@ -294,7 +296,7 @@ public class XmlConfig extends XmlContent
 		}
 		catch (Exception e)
 		{
-			Log.error("Can't instantiate class for " + name + " - " + e.getMessage());
+			LOG.error("Can't instantiate class for " + name + " - " + e.getMessage());
 			return null;
 		}
 	}
@@ -360,7 +362,7 @@ public class XmlConfig extends XmlContent
 		String s = getValue (getElement (tag));
 		if ((s != null) && (s.length() > 0))
 		  return s;
-		// Log.debug("Nothing found at " + tag);
+		// LOG.debug("Nothing found at " + tag);
 		return null;
   }
   
@@ -382,7 +384,7 @@ public class XmlConfig extends XmlContent
 		  	return s;
 		  e = getParentElement (e);
 		}
-  	Log.debug ("Can't find " + tag);
+  	LOG.debug ("Can't find " + tag);
   	return null;
   }
   

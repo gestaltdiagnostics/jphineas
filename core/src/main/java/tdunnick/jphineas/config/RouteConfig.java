@@ -21,14 +21,17 @@ package tdunnick.jphineas.config;
 
 import java.io.File;
 
-import tdunnick.jphineas.logging.Log;
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.sender.RouteProcessor;
 
 public class RouteConfig extends SenderConfig
 {
+	private static final Logger LOG = Logger.getLogger(RouteConfig.class);
+	
 	boolean init ()
 	{
-		// Log.debug ("initialzing RouteConfig");
+		// LOG.debug ("initialzing RouteConfig");
 		if (!super.init ())
 			return false;
 		String[] tags = 
@@ -39,7 +42,7 @@ public class RouteConfig extends SenderConfig
 		{
 			if (getValue (tags[i]) == null)
 			{
-				Log.error ("Route Map missing value for " + tags[i]);
+				LOG.error ("Route Map missing value for " + tags[i]);
 				return false;
 			}
 		}

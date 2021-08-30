@@ -23,12 +23,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.filter.PhineasInputFilter;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.sender.FolderProcessor;
 
 public class FolderConfig extends SenderConfig
 {
+	private static final Logger LOG = Logger.getLogger(FolderConfig.class);
 
 	boolean init ()
 	{
@@ -43,7 +45,7 @@ public class FolderConfig extends SenderConfig
 		{
 			if (getValue (tags[i]) == null)
 			{
-				Log.error ("Folder Map missing value for " + tags[i]);
+				LOG.error ("Folder Map missing value for " + tags[i]);
 				return false;
 			}
 		}
@@ -74,14 +76,14 @@ public class FolderConfig extends SenderConfig
 		{
 			if (!PhineasInputFilter.class.isAssignableFrom(cf))
 			{
-				Log.error(cf.getName() + " is not a PhineasInputFilter");
+				LOG.error(cf.getName() + " is not a PhineasInputFilter");
 				return null;
 			}
 			return cf.getConstructor(InputStream.class);
 		}
 		catch (Exception e)
 		{
-			Log.error("Couldn't load filter " + cf.getName(), e);
+			LOG.error("Couldn't load filter " + cf.getName(), e);
 			return null;
 		}		
 	}

@@ -23,9 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.config.RouteConfig;
 import tdunnick.jphineas.ebxml.EbXmlRequest;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.mime.MimeReceiver;
 import tdunnick.jphineas.sender.RouteProcessor;
@@ -45,6 +46,8 @@ import tdunnick.jphineas.xml.SoapXml;
  */
 public class EbXmlRouteProcessor extends RouteProcessor {
 	private RouteConfig config = null;
+
+	private static final Logger LOG = Logger.getLogger(EbXmlRouteProcessor.class);
 
 	public boolean configure(RouteConfig cfg) {
 		if ((this.config = cfg) == null)
@@ -87,7 +90,7 @@ public class EbXmlRouteProcessor extends RouteProcessor {
 				// set up a connection
 				if (socket == null) {
 					if ((socket = SocketFactory.createSocket(config)) == null) {
-						Log.error("Failed to open connection to " + config.getHost());
+						LOG.error("Failed to open connection to " + config.getHost());
 						break;
 					}
 				}
@@ -97,11 +100,11 @@ public class EbXmlRouteProcessor extends RouteProcessor {
 				if (authid != null) {
 					mime.setBasicAuth(authid, pw);
 				}
-				Log.debug("sending EbXml request:\n" + req + mime.toString());
+				LOG.debug("sending EbXml request:\n" + req + mime.toString());
 				out.write(req.getBytes());
 				out.write(mime.toString().getBytes());
 				out.flush();
-				Log.debug("waiting for reply");
+				LOG.debug("waiting for reply");
 				MimeContent msg = MimeReceiver.receive(in);
 				// if the remote closed the socket, then clean up
 				if (!socket.isConnected() || true) {
@@ -109,14 +112,14 @@ public class EbXmlRouteProcessor extends RouteProcessor {
 					socket = null;
 				}
 				// then parse the reply and update our row
-				Log.debug("response:\n" + msg.toString());
+				LOG.debug("response:\n" + msg.toString());
 				xml = ebReq.ParseMessagePackage(msg, soap.getHdrMessageId());
 				if (xml == null || !xml.ok()) {
 					break;
 				}
 			}
 		} catch (Exception e) {
-			Log.error("Failed sending EbXML message", e);
+			LOG.error("Failed sending EbXML message", e);
 		} finally {
 			// TODO digest authentication response?
 			if (socket != null) {

@@ -25,7 +25,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
-import tdunnick.jphineas.logging.Log;
+import org.apache.log4j.Logger;
 
 /**
  * Read an incoming message in Mime format.  This may be coming from either
@@ -36,6 +36,8 @@ import tdunnick.jphineas.logging.Log;
  */
 public class MimeReceiver
 {
+	private static final Logger LOG = Logger.getLogger(MimeReceiver.class);
+
   /**
    * Read and parse incoming MIME content from an HTTP request.  This relies on
    * end of file, multipart boundary, or Content-Length to determine end of message.
@@ -62,12 +64,12 @@ public class MimeReceiver
  				if ((boundary == null) && v.contains("boundary="))
 				{
 					boundary = v.replaceFirst("^.*boundary=\"*([^\";]*).*$", "--$1--");
-					Log.debug ("Boundary=" + boundary);
+					LOG.debug ("Boundary=" + boundary);
 				}
  				else if (n.equalsIgnoreCase ("content-length"))
  				{
  					len = Integer.parseInt(v);
- 					Log.debug("Length=" + len);
+ 					LOG.debug("Length=" + len);
  					continue;
  				}
  				buf.append(n + ": " + v + "\n");
@@ -108,12 +110,12 @@ public class MimeReceiver
 				if (l.toLowerCase().startsWith("content-length: "))
 				{
 					len = Integer.parseInt(buf.substring(line + 16));
-					Log.debug ("Len=" + len + " for " + l + " at " + buf.length());
+					LOG.debug ("Len=" + len + " for " + l + " at " + buf.length());
 				}
 				else if (l.contains("boundary="))
 				{
 					boundary = l.replaceFirst("^.*boundary=\"*([^\";]*).*$", "--$1--");
-					Log.debug ("Boundary=" + boundary);
+					LOG.debug ("Boundary=" + boundary);
 				}
 				line = buf.length() + 1;
 			}

@@ -28,11 +28,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.common.JPhineas;
 import tdunnick.jphineas.config.PhineasConfig;
 import tdunnick.jphineas.config.ReceiverConfig;
 import tdunnick.jphineas.config.ServiceConfig;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.mime.MimeReceiver;
 import tdunnick.jphineas.xml.SoapXml;
@@ -57,9 +58,6 @@ public class Receiver extends HttpServlet
 	/** properties */
 	private static String configName = null;
 	
-	/** log ID */
-	private static String logId = null;
-	
 	/** current status */
 	private static String status = "stopped";
 	
@@ -77,6 +75,8 @@ public class Receiver extends HttpServlet
 	private static HashMap <String, ReceiverProcessor> processors = 
 		new HashMap <String, ReceiverProcessor>();
 	
+	private static final Logger LOG = Logger.getLogger(Receiver.class);
+
 	/**
 	 * Basic sanity checks on configuration, initialize security and queue
 	 * manager, set configuration defaults, instantiate and load service 
@@ -102,8 +102,7 @@ public class Receiver extends HttpServlet
 			return false;
 		}
 		ReceiverConfig config = p.getReceiver();
-		logId = Log.configure (config.getLog());
-		Log.info("Receiver starting...");
+		LOG.info("Receiver starting...");
 		// CPA folder and reply cache
 		cpadir = config.getCpaDirectory();
 		replies = new ReplyCache (config.getCacheFolder());
@@ -116,17 +115,17 @@ public class Receiver extends HttpServlet
 			ReceiverProcessor processor = cfg.getProcessor ();
 			if (processor == null)
 			{
-				Log.error("Failed loading processor for " + serviceAction);
+				LOG.error("Failed loading processor for " + serviceAction);
 				continue;
 			}
 			if (!processor.configure (cfg))
 			{
-				Log.error("Failed configuring processor for " + serviceAction);
+				LOG.error("Failed configuring processor for " + serviceAction);
 				continue;
 			}
 			processors.put(serviceAction, processor);
 		}
-		Log.info("Receiver started");
+		LOG.info("Receiver started");
 		status = "running";
 		return (true);
 	}
@@ -163,13 +162,12 @@ public class Receiver extends HttpServlet
 			throws ServletException, IOException
 	{
 		Thread.currentThread().setName("Receiver");
-		Log.setLogConfig(Thread.currentThread(), logId);
-		Log.info("********************** Begin message "
+		LOG.info("********************** Begin message "
 				+ " processing **********************");
 		// process the request
 		if (!processRequest (req, resp))
 			serverError (resp, "Failed to process POST request");
-		Log.info("******************* Completed message "
+		LOG.info("******************* Completed message "
 				+ "processing ********************");
 	}
 
@@ -194,14 +192,14 @@ public class Receiver extends HttpServlet
 		{
 			return serverError (resp, "Failed parsing ebXML message " + e.getLocalizedMessage());
 		}
-		Log.debug("Request: \n" + mimeRequest.toString());
+		LOG.debug("Request: \n" + mimeRequest.toString());
 		// get message parts
 		MimeContent[] parts = mimeRequest.getMultiParts();
 		// check the parts
 		if (parts == null)
 			return serverError (resp, "Not a multi-part Mime request");
 		// get the ebXML soap part
-		// Log.debug("Loading request: " + parts[0].getBody());
+		// LOG.debug("Loading request: " + parts[0].getBody());
 		SoapXml soap = new SoapXml (parts[0].getBody());
 		// make sure we got ebXML
 		if (!soap.ok ())
@@ -209,7 +207,7 @@ public class Receiver extends HttpServlet
 			return serverError (resp, "Request is not ebXML SOAP");
 		}
 		soap.beautify(2);
-		Log.debug ("Request " + parts.length + " parts:" + soap.toString());
+		LOG.debug ("Request " + parts.length + " parts:" + soap.toString());
 		// check for a valid CPA
 		File cpa = new File (cpadir + soap.getCPAId () + ".xml");
 		if (!cpa.exists ())
@@ -259,14 +257,14 @@ public class Receiver extends HttpServlet
 	 */
 	private boolean serverError (HttpServletResponse resp, String msg)
 	{
-		Log.error(msg);
+		LOG.error(msg);
 		try
 		{
 		  resp.sendError (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, msg);
 		}
 		catch (IOException e)
 		{
-			Log.error("Could not send response", e);
+			LOG.error("Could not send response", e);
 			return false;
 		}
 		return true;
@@ -279,7 +277,7 @@ public class Receiver extends HttpServlet
 	public void destroy()
 	{
 		shutdown ();
-		Log.info("Receiver Exiting...");
+		LOG.info("Receiver Exiting...");
 		super.destroy();
 	}
 
@@ -296,6 +294,6 @@ public class Receiver extends HttpServlet
 			throw (new ServletException ("Fatal error: error initializing jPhineas Receiver"));
 		}
 		status = "ready";
-		Log.info ("jPhineas Receiver Ready");
+		LOG.info ("jPhineas Receiver Ready");
 	}
 }

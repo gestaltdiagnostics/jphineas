@@ -19,7 +19,7 @@
 
 package tdunnick.jphineas.util;
 
-import tdunnick.jphineas.logging.Log;
+import org.apache.log4j.Logger;
 
 /**
  * Some extensions to our threads for managing graceful exits
@@ -29,6 +29,8 @@ import tdunnick.jphineas.logging.Log;
  */
 public class Pthread extends Thread
 {
+	private static final Logger LOG = Logger.getLogger(Pthread.class);
+
 	/**
 	 * all Pthreads get names and default log configuration inherited from parent
 	 * @param name
@@ -37,7 +39,6 @@ public class Pthread extends Thread
 	{
 		super();
 		this.setName(name);
-		Log.setLogConfig (this, null);
 	}
 	
   /**
@@ -72,7 +73,7 @@ public class Pthread extends Thread
   	}
   	catch (InterruptedException e)
   	{
-  		Log.debug("Sleep interrupted!");
+  		LOG.debug("Sleep interrupted!");
   		return false;
   	}
   	return true;
@@ -99,7 +100,7 @@ public class Pthread extends Thread
 		}
 		catch (Exception e)
 		{
-			Log.error ("Failed to join " + this.getClass().getName());
+			LOG.error ("Failed to join " + this.getClass().getName());
 		}
 	}
 }

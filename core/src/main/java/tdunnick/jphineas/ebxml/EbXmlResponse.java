@@ -22,8 +22,9 @@ package tdunnick.jphineas.ebxml;
 import java.lang.reflect.Constructor;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.config.XmlConfig;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.util.DateFmt;
 import tdunnick.jphineas.xml.SoapXml;
@@ -35,7 +36,9 @@ public class EbXmlResponse
 	// configuration pieces needed...
   /** a filter */
 	Constructor <?> filter = null; 
- 
+
+	private static final Logger LOG = Logger.getLogger(EbXmlResponse.class);
+
 	/**
 	 * Configure an ebXML mime packager 
 	 * 
@@ -51,13 +54,13 @@ public class EbXmlResponse
 		{
 			Class<?> cf = Class.forName(s);
 			if (!PhineasOutputFilter.class.isAssignableFrom(cf))
-				Log.error(s + " is not a PhineasInputFilter");
+				LOG.error(s + " is not a PhineasInputFilter");
 			else
 			  filter = cf.getConstructor(InputStream.class);
 		}
 		catch (Exception e)
 		{
-			Log.error("Couldn't load filter " + s, e);
+			LOG.error("Couldn't load filter " + s, e);
 		}	
 		*/	
 	}
@@ -115,7 +118,7 @@ public class EbXmlResponse
 		part.setContentType(MimeContent.XML);
 		if (!part.setBody (soap.toString()))
 		{
-			Log.error("Failed creating soap response");
+			LOG.error("Failed creating soap response");
 			return null;
 		}
 		return part;

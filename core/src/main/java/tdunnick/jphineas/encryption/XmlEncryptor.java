@@ -23,7 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.security.Key;
 
-import tdunnick.jphineas.logging.Log;
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.xml.EncryptionXml;
 
 /**
@@ -36,7 +37,9 @@ import tdunnick.jphineas.xml.EncryptionXml;
  *
  */
 public class XmlEncryptor
-{	
+{
+	private static final Logger LOG = Logger.getLogger(XmlEncryptor.class);
+
 	/**
 	 * Encrypt and return an XML payload as a string.  Note the XML is 
 	 * initially obtained from Template.  For PEM encoded certificates, the 
@@ -53,7 +56,7 @@ public class XmlEncryptor
 	{
 		if ((path == null) || (payload == null))
 			return null;
-		Log.debug ("encryption path=" + path);
+		LOG.debug ("encryption path=" + path);
 		if (dn == null)
 			dn = new StringBuffer ();
 		EncryptionXml xml = new EncryptionXml ();
@@ -78,7 +81,7 @@ public class XmlEncryptor
 		}
 		if ((dn == null) || (dn.length() == 0))
 		{
-			Log.error("Certificate DN not found");
+			LOG.error("Certificate DN not found");
 			return null;
 		}
 		xml.setKeyName (dn.toString());
@@ -90,7 +93,7 @@ public class XmlEncryptor
 		}
 		catch (Exception e)
 		{
-			Log.error("Can't store payload: " + e.getMessage());
+			LOG.error("Can't store payload: " + e.getMessage());
 			return null;
 		}
 		return out.toString();
@@ -112,25 +115,25 @@ public class XmlEncryptor
 		EncryptionXml xml = new EncryptionXml (payload);
 		if (!xml.ok ())
 		{
-			Log.debug ("payload is not encrypted");
+			LOG.debug ("payload is not encrypted");
 			return payload.getBytes();
 		}
 		String dn = xml.getKeyName ();
 		if (dn == null)
 		{
-			Log.error("Payload key name not found");
+			LOG.error("Payload key name not found");
 			return null;
 		}
 		String ckey = xml.getKeyValue();
 		if (ckey == null)
 		{
-			Log.error("Payload encryption key not found");
+			LOG.error("Payload encryption key not found");
 			return null;
 		}
 		String data = xml.getData ();
 		if (data == null)
 		{
-			Log.error("Payload data not found");
+			LOG.error("Payload data not found");
 			return null;
 		}
 		return decryptData (path, storepass, keypass, new StringBuffer(dn), ckey, data);
@@ -151,11 +154,11 @@ public class XmlEncryptor
 			String keypass, StringBuffer dn, String ckey, String data)
 	{
 		Encryptor crypt = new Encryptor ();
-	  Log.debug("getting RSA key");
+	  LOG.debug("getting RSA key");
 		Key key = crypt.getPrivateKey(path, storepass, keypass, dn);
-		Log.debug("getting DES key");
+		LOG.debug("getting DES key");
     key = crypt.decryptKey(ckey, key, Encryptor.DES_TRANSFORM);
-    Log.debug("decrypting payload");
+    LOG.debug("decrypting payload");
     return crypt.decrypt(data, key);
 	}
 }

@@ -22,8 +22,9 @@ package tdunnick.jphineas.filter;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.encryption.XmlEncryptor;
-import tdunnick.jphineas.logging.Log;
 
 /**
  * Perform encryption as a OutputStream filter.  Pass just the <Encryption>
@@ -35,6 +36,7 @@ import tdunnick.jphineas.logging.Log;
  */
 public class EncryptorOutputFilter extends PhineasOutputFilter
 {
+	private static final Logger LOG = Logger.getLogger(EncryptorOutputFilter.class);
 
 	public EncryptorOutputFilter(OutputStream arg0)
 	{
@@ -55,7 +57,7 @@ public class EncryptorOutputFilter extends PhineasOutputFilter
 		byte[] b = buf.toByteArray();
 		if (b.length == 0)
 			return false;
-		Log.debug("encrypting: " + new String (b));
+		LOG.debug("encrypting: " + new String (b));
 		// do the encryption
 		XmlEncryptor crypt = new XmlEncryptor ();
 		String payload = crypt.encryptPayload(keystore, storePass, dn, b);

@@ -21,11 +21,12 @@ package tdunnick.jphineas.receiver;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.config.ServiceConfig;
 import tdunnick.jphineas.ebxml.EbXmlAppResponse;
 import tdunnick.jphineas.ebxml.EbXmlAttachment;
 import tdunnick.jphineas.ebxml.EbXmlResponse;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.util.Chunker;
 import tdunnick.jphineas.xml.SoapXml;
@@ -38,6 +39,8 @@ import tdunnick.jphineas.xml.SoapXml;
  */
 public class PayloadProcessor extends ReceiverProcessor {
 	ServiceConfig config = null;
+
+	private static final Logger LOG = Logger.getLogger(PayloadProcessor.class);
 
 	/**
 	 * Simply save the configuration
@@ -71,7 +74,7 @@ public class PayloadProcessor extends ReceiverProcessor {
 		String password = config.getDecryptionPassword();
 		File cert = config.getDecryptionUnc();
 		if ((cert != null) && !cert.canRead()) {
-			Log.error("Can't read certificate " + cert.getAbsolutePath());
+			LOG.error("Can't read certificate " + cert.getAbsolutePath());
 			cert = null;
 		}
 		// and our destination directory
@@ -94,14 +97,14 @@ public class PayloadProcessor extends ReceiverProcessor {
 			if (encrypted && (cert != null)) {
 				if (!a.decrypt(cert, password)) {
 					String s = "Could not decrypt payload for " + a.getName();
-					Log.error(s);
+					LOG.error(s);
 					rsp.set("abnormal", s, "failure");
 				}
 			}
-			// Log.debug("Saving payload to " + f.getAbsolutePath());
+			// LOG.debug("Saving payload to " + f.getAbsolutePath());
 			if (!a.savePayload(f)) {
 				String s = "Could not save payload for " + a.getName();
-				Log.error(s);
+				LOG.error(s);
 				rsp.set("abnormal", s, "failure");
 			}
 			response.addMultiPart(rsp.get());
@@ -110,7 +113,7 @@ public class PayloadProcessor extends ReceiverProcessor {
 				// don't update our queue until all chunks are received!
 				if (Chunker.saved(chunkid) < numParts)
 					continue;
-				Log.debug("assembling " + numParts + " parts for " + a.getName());
+				LOG.debug("assembling " + numParts + " parts for " + a.getName());
 				Chunker.assemble(new File(dir + "/" + a.getName()), chunkid);
 			}
 		}

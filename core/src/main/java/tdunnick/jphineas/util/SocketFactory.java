@@ -33,8 +33,9 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.config.RouteConfig;
-import tdunnick.jphineas.logging.Log;
 
 /**
  * Set up a trust manager and open a sockets based on the protocol 
@@ -48,6 +49,8 @@ public class SocketFactory
 	/** cache the CA and trust managers */
 	private static String certificateAuthority = "";
 	private static TrustManager[] senderTrustManagers = null;
+
+	private static final Logger LOG = Logger.getLogger(SocketFactory.class);
 
 	/**
 	 * This builds a set of trustmanagers for the given certificate authority
@@ -78,7 +81,7 @@ public class SocketFactory
 		 // load the CA and create a set of trust managers
 		 try
 		 {
-			 Log.debug ("CA " + name + " " + password);
+			 LOG.debug ("CA " + name + " " + password);
 		   KeyStore ks = KeyStore.getInstance ("JKS"); // assumes java keystore format
 		   ks.load (new FileInputStream (file), password.toCharArray());
 		   TrustManagerFactory tf = 
@@ -89,7 +92,7 @@ public class SocketFactory
 		 }
 		 catch (Exception e)
 		 {
-			 Log.error("Failed loading CA " + name, e);
+			 LOG.error("Failed loading CA " + name, e);
 			 return null;
 		 }
 	 }
@@ -109,7 +112,7 @@ public class SocketFactory
 		 int timeout = config.getTimeout () * 1000;
 		 if ((host == null) || (protocol == null) || (port == 0))
 		 {
-			 Log.error("Route missing connection information (Host, Protocol, Port)");
+			 LOG.error("Route missing connection information (Host, Protocol, Port)");
 			 return null;
 		 }
 		 try
@@ -131,7 +134,7 @@ public class SocketFactory
 				 String password = config.getAuthenticationPassword();
 				 if ((cert == null) || (password == null))
 				 {
-					 Log.error("Route Authentication mis-configured");
+					 LOG.error("Route Authentication mis-configured");
 					 return null;
 				 }
 
@@ -155,7 +158,7 @@ public class SocketFactory
 		 }
 		 catch (Exception e)
 		 {
-			 Log.error("Unable to connect to " + protocol + "://" + host + ":" + port
+			 LOG.error("Unable to connect to " + protocol + "://" + host + ":" + port
 					 + " - " + e.getMessage());
 			 return null;
 		 }	 		 

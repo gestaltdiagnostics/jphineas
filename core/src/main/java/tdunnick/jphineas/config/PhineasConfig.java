@@ -21,15 +21,16 @@ package tdunnick.jphineas.config;
 
 import java.io.File;
 import java.net.InetAddress;
-import org.w3c.dom.*;
 
-import tdunnick.jphineas.logging.Log;
+import org.apache.log4j.Logger;
 
 public class PhineasConfig extends XmlConfig
 {
-  boolean init ()
+	private static final Logger LOG = Logger.getLogger(PhineasConfig.class);
+
+	boolean init ()
 	{
-		// Log.debug ("initialzing PhineasConfig");
+		// LOG.debug ("initialzing PhineasConfig");
  	  if (!super.init ())
    		return false;
  		if (findValue ("Domain") == null)	try
@@ -38,7 +39,7 @@ public class PhineasConfig extends XmlConfig
 		}
 		catch (Exception e)
 		{
-			Log.error ("Can't set host domain " + e.getMessage());
+			LOG.error ("Can't set host domain " + e.getMessage());
 			return false;
 		}
 		return true;

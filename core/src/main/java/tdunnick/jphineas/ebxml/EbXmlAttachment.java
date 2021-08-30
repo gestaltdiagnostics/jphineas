@@ -23,8 +23,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.encryption.XmlEncryptor;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 
 /**
@@ -38,7 +39,9 @@ public class EbXmlAttachment
 	byte[] payload = null;
 	String id = null;
 	String name = null;
-	
+
+	private static final Logger LOG = Logger.getLogger(EbXmlAttachment.class);
+
 	/**
 	 * default constructor for a new empty attachment
 	 */
@@ -135,7 +138,7 @@ public class EbXmlAttachment
 		}
 		catch (IOException ex)
 		{
-			Log.error ("Failed writing " + f.getPath() + ": " + ex.getMessage());
+			LOG.error ("Failed writing " + f.getPath() + ": " + ex.getMessage());
 			return false;
 		}
 	}
@@ -212,7 +215,7 @@ public class EbXmlAttachment
 		String enc = crypt.encryptPayload(path, base, dnbuf, payload);
 		if (enc == null)
 		{
-			Log.error ("Failed to encrypt payload");
+			LOG.error ("Failed to encrypt payload");
 			return false;
 		}
 		payload = enc.getBytes();

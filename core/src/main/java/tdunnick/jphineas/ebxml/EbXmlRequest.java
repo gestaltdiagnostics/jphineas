@@ -20,12 +20,12 @@
 package tdunnick.jphineas.ebxml;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.config.RouteConfig;
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.util.Chunker;
 import tdunnick.jphineas.util.DateFmt;
@@ -69,6 +69,8 @@ public class EbXmlRequest {
 	private String publicKeyLdapDn;
 
 	private ByteBuffer messageContent;
+	
+	private static final Logger LOG = Logger.getLogger(EbXmlRequest.class);
 
 	/**
 	 * Configure an ebXML request based on the route
@@ -136,7 +138,7 @@ public class EbXmlRequest {
 			soap.delete(SoapXml.bdy);
 		}
 		// soap.beautify(2);
-		// Log.debug("Soap content: " + soap.toString());
+		// LOG.debug("Soap content: " + soap.toString());
 		return soap;
 	}
 
@@ -220,7 +222,7 @@ public class EbXmlRequest {
 		if (certificateUrl == null) {
 			p.encrypt(publicKeyLdapAddress, publicKeyLdapBaseDn, publicKeyLdapDn);
 		}
-		// Log.debug("Payload part: " + p.get().toString());
+		// LOG.debug("Payload part: " + p.get().toString());
 		return p.get();
 	}
 
@@ -237,11 +239,11 @@ public class EbXmlRequest {
 		}
 		MimeContent hdr = getHeaderContainer(soap);
 		if (hdr == null) {
-			Log.debug("Failed creating ebXML envelope");
+			LOG.debug("Failed creating ebXML envelope");
 			return null;
 		}
 		soap.beautify(2);
-		// Log.debug("Soap request: " + soap.toString());
+		// LOG.debug("Soap request: " + soap.toString());
 
 		// now package it all up
 		MimeContent mime = new MimeContent();
@@ -267,17 +269,17 @@ public class EbXmlRequest {
 	public ResponseXml ParseMessagePackage(MimeContent mime, String id) {
 		ResponseXml resp = null;
 		if (mime == null) {
-			Log.debug("mime was null");
+			LOG.debug("mime was null");
 			return resp;
 		}
 		MimeContent[] parts = mime.getMultiParts();
 		if ((parts == null) || (parts.length == 0)) {
-			Log.debug("no mime parts found");
+			LOG.debug("no mime parts found");
 			return resp;
 		}
-		Log.debug("found " + parts.length + " parts");
+		LOG.debug("found " + parts.length + " parts");
 		if (!parseSoapEnvelope(partyId, cpa, new String(parts[0].getBody()), id)) {
-			Log.debug("Failed parsing soap envelope");
+			LOG.debug("Failed parsing soap envelope");
 			return resp;
 		}
 		// well, we really only expect one for now...
@@ -298,37 +300,37 @@ public class EbXmlRequest {
 	private boolean parseSoapEnvelope(String partyId, String cpa, String data, String id) {
 		SoapXml soap = new SoapXml(data);
 		if (!soap.ok()) {
-			Log.error("Failed parsing reply");
+			LOG.error("Failed parsing reply");
 			return false;
 		}
 		soap.beautify(2);
-		Log.debug("Parsing Soap envelope:\n" + soap.toString());
+		LOG.debug("Parsing Soap envelope:\n" + soap.toString());
 		String e = soap.getError(0);
 		if (e != null) {
-			Log.error("ebXML error " + e);
+			LOG.error("ebXML error " + e);
 			return false;
 		}
 		if (!soap.getFromPartyId().equals(partyId)) {
-			Log.error("Incorrect route in reply");
+			LOG.error("Incorrect route in reply");
 			return false;
 		}
 		if (!soap.getCPAId().equals(cpa)) {
-			Log.error("Incorrect cpa in reply");
+			LOG.error("Incorrect cpa in reply");
 			return false;
 		}
 		if (!soap.getService().equals("urn:oasis:names:tc:ebxml-msg:service")) {
-			Log.error("Unexpected service");
+			LOG.error("Unexpected service");
 			return false;
 		}
 		String action = soap.getAction();
 		if (action.equals("Acknowledgment")) {
 			String s = soap.getAckRefToMessageId();
 			if (!s.equals(id)) {
-				Log.error("Incorrect message reference ID " + s);
+				LOG.error("Incorrect message reference ID " + s);
 				return false;
 			}
 		} else if (!action.equals("Pong")) {
-			Log.error("Unexpected response action " + action);
+			LOG.error("Unexpected response action " + action);
 			return false;
 		}
 		return true;

@@ -24,7 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import tdunnick.jphineas.logging.Log;
+import org.apache.log4j.Logger;
+
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.util.Cache;
 import tdunnick.jphineas.xml.SoapXml;
@@ -43,7 +44,9 @@ public class ReplyCache extends Cache
 	File cacheDir = null;
 	/** lifetime in cache - default 12 hours */
 	int lifetime = (60 * 60 * 12);
-	
+
+	private static final Logger LOG = Logger.getLogger(ReplyCache.class);
+
 	/**
 	 * initializes a reply cache, removing and left overs and create cache
 	 * directory as needed
@@ -59,12 +62,12 @@ public class ReplyCache extends Cache
 		File[] list = cache.listFiles();
 		if (list == null)
 		{
-			Log.error(cache.getPath() + "is not a valid response cache directory");
+			LOG.error(cache.getPath() + "is not a valid response cache directory");
 			return;
 		}
 		for (int i = 0; i < list.length; i++)
 			list[i].delete ();
-		Log.info("Initialized reply cache at " + cache.getAbsolutePath());
+		LOG.info("Initialized reply cache at " + cache.getAbsolutePath());
 		cacheDir = cache;
 	}
 	
@@ -100,7 +103,7 @@ public class ReplyCache extends Cache
 		}
 		catch (IOException e)
 		{
-			Log.error("Failed reading " + fn.getAbsolutePath() + " from reply cache");
+			LOG.error("Failed reading " + fn.getAbsolutePath() + " from reply cache");
 			super.remove(getKey (soap));
 			return null;
 		}
@@ -129,7 +132,7 @@ public class ReplyCache extends Cache
 		}
 		catch (IOException e)
 		{
-			Log.error("Failed writing " + fn.getAbsolutePath() 
+			LOG.error("Failed writing " + fn.getAbsolutePath() 
 					+ " to reply cache - " + e.getMessage());
 			return;
 		}

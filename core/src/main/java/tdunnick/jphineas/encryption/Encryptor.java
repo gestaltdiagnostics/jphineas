@@ -46,9 +46,9 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64;
 
-import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.util.ByteArray;
 
 
@@ -56,7 +56,9 @@ public class Encryptor
 {
 	public final static String RSA_TRANSFORM = "RSA/ECB/PKCS1PADDING";
 	public final static String DES_TRANSFORM = "DESede/CBC/PKCS5Padding";
-		
+
+	private static final Logger LOG = Logger.getLogger(Encryptor.class);
+
 	/**
 	 * add any needed security providers - this is done in the jPhineas servlet
 	public Encryptor ()
@@ -67,7 +69,7 @@ public class Encryptor
 
 	private String getTransform (Key key)
 	{
-		Log.debug("Algorithm: " + key.getAlgorithm());
+		LOG.debug("Algorithm: " + key.getAlgorithm());
 		if (key.getAlgorithm().equals("RSA"))
 			return RSA_TRANSFORM;
 		return DES_TRANSFORM;
@@ -86,7 +88,7 @@ public class Encryptor
 		}
 		catch (NoSuchAlgorithmException e)
 		{
-			Log.error("Can't generate key for " + DES_TRANSFORM + ": " + e.getMessage());
+			LOG.error("Can't generate key for " + DES_TRANSFORM + ": " + e.getMessage());
 		}
 		return null;
 	}
@@ -116,7 +118,7 @@ public class Encryptor
 		}
 		catch (Exception e)
 		{
-			// Log.debug("Failed loading " + path + ": " + e.getMessage());
+			// LOG.debug("Failed loading " + path + ": " + e.getMessage());
 		}
 		try
 		{
@@ -128,7 +130,7 @@ public class Encryptor
 		}
 		catch (Exception e)
 		{
-			Log.error("Failed loading " + path + ": " + e.getMessage());
+			LOG.error("Failed loading " + path + ": " + e.getMessage());
 		}
 		return null;
 	}
@@ -167,12 +169,12 @@ public class Encryptor
 				}
 				if (pdn.equals(cert.getSubjectDN().getName()))
 					return alias;
-				Log.debug("Skipping " + cert.getSubjectDN().getName());
+				LOG.debug("Skipping " + cert.getSubjectDN().getName());
 			}
 		}
 		catch (KeyStoreException e)
 		{
-			Log.error("Can't find " + dn + ": " + e.getMessage());
+			LOG.error("Can't find " + dn + ": " + e.getMessage());
 		}
 		return null;
 	}
@@ -228,7 +230,7 @@ public class Encryptor
 		}
 		catch (Exception e)
 		{
-			Log.error("Can't find " + dn + " in keystore: "
+			LOG.error("Can't find " + dn + " in keystore: "
 					+ e.getMessage());
 		}
 		return null;
@@ -256,7 +258,7 @@ public class Encryptor
 				{
 					if (retries > 10)
 					{
-						Log.error ("LDAP retries exhausted");
+						LOG.error ("LDAP retries exhausted");
 						break;
 					}
 					Thread.sleep(250);
@@ -278,7 +280,7 @@ public class Encryptor
 						cert = attr.get();
 					if ((cert == null) || !cert.getClass().equals(byte[].class))
 					{
-						Log.error("LDAP " + url + " has no certificate for " + cn);
+						LOG.error("LDAP " + url + " has no certificate for " + cn);
 						return null;					
 					}
 				  return getPublicKey (new ByteArrayInputStream ((byte[]) cert), dn);	
@@ -290,7 +292,7 @@ public class Encryptor
 				String msg = e.getMessage();
 				if (!msg.contains("Busy"))
 				{
-					Log.error("Can't get key from " + url + " for " + cn + ": " + msg);
+					LOG.error("Can't get key from " + url + " for " + cn + ": " + msg);
 					break;
 				}
 				retries++;
@@ -321,7 +323,7 @@ public class Encryptor
 		}
 		catch (Exception e)
 		{
-			Log.error("Can't find " + dn + " in " + path + ": "
+			LOG.error("Can't find " + dn + " in " + path + ": "
 					+ e.getMessage());
 			return null;
 		}
@@ -346,7 +348,7 @@ public class Encryptor
   	}
 		catch (Exception e)
 		{
-			Log.error("Can't get key from " + path + ": " + e.getMessage());
+			LOG.error("Can't get key from " + path + ": " + e.getMessage());
 			return null;
 		} 	
   }
@@ -379,7 +381,7 @@ public class Encryptor
 		}
 		catch (Exception e)
 		{
-			Log.error("Can't get public key: " + e.getMessage());
+			LOG.error("Can't get public key: " + e.getMessage());
 			return null;
 		}
 	}
@@ -420,7 +422,7 @@ public class Encryptor
   	try
   	{
   		Cipher cipher = Cipher.getInstance(getTransform (key));
-  		Log.debug("cipher algorithm is: " + cipher.getAlgorithm());
+  		LOG.debug("cipher algorithm is: " + cipher.getAlgorithm());
 			// triple DES CBC block uses 8 byte initial vector
 			if (key.getAlgorithm().startsWith("DESede"))
 			{
@@ -434,7 +436,7 @@ public class Encryptor
   	}
   	catch (Exception e)
   	{
-  		Log.error("Can't get cipher for " + key.getAlgorithm() + ": " + e.getMessage(), e);
+  		LOG.error("Can't get cipher for " + key.getAlgorithm() + ": " + e.getMessage(), e);
   	}
   	return null;
   }
@@ -463,7 +465,7 @@ public class Encryptor
 		}
 		catch (Exception e)
 		{
-			Log.error("Can't encrypt with " + getTransform(key) + ": " + e.getMessage());
+			LOG.error("Can't encrypt with " + getTransform(key) + ": " + e.getMessage());
 		}
 		return null;
 	}
@@ -506,7 +508,7 @@ public class Encryptor
 		}
 		catch (Exception e)
 		{
-			Log.error("Can't decrypt with " + getTransform (key),e);
+			LOG.error("Can't decrypt with " + getTransform (key),e);
 		}
 		return null;
 	}
