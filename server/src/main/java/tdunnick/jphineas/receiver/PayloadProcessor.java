@@ -27,11 +27,7 @@ import tdunnick.jphineas.ebxml.EbXmlAttachment;
 import tdunnick.jphineas.ebxml.EbXmlResponse;
 import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.mime.MimeContent;
-import tdunnick.jphineas.queue.PhineasQ;
-import tdunnick.jphineas.queue.PhineasQManager;
-import tdunnick.jphineas.queue.PhineasQRow;
 import tdunnick.jphineas.util.Chunker;
-import tdunnick.jphineas.util.DateFmt;
 import tdunnick.jphineas.xml.SoapXml;
 
 /**
@@ -40,139 +36,84 @@ import tdunnick.jphineas.xml.SoapXml;
  * @author Thomas Dunnick tdunnick@wisc.edu
  *
  */
-public class PayloadProcessor extends ReceiverProcessor
-{
-  ServiceConfig config = null;
-  PhineasQ queue = null;
-  
+public class PayloadProcessor extends ReceiverProcessor {
+	ServiceConfig config = null;
+
 	/**
 	 * Simply save the configuration
+	 * 
 	 * @param config to save
 	 * @see tdunnick.jphineas.receiver.ReceiverProcessor#configure(tdunnick.jphineas.config.ServiceConfig)
 	 */
-	protected boolean configure(ServiceConfig config)
-	{
+	protected boolean configure(ServiceConfig config) {
 		this.config = config;
-		String s = config.getQueue();
-		if (s == null)
-		{
-			Log.error ("Receiver Queue not specified");
-			return false;
-		}
-		if ((queue = PhineasQManager.getInstance().getQueue (s)) == null)
-		{
-			Log.error("Can't access queue " + s);
-			return false;
-		}
 		return true;
 	}
 
 	/**
-	 * A Payload response decodes and stores any payload, and includes a part 
-	 * for the application response for each payload found.
+	 * A Payload response decodes and stores any payload, and includes a part for
+	 * the application response for each payload found.
 	 * 
 	 * @param request request
-	 * @param parts of the request (ignored)
+	 * @param parts   of the request (ignored)
 	 * @return mime package for the response
-	 * @see tdunnick.jphineas.receiver.ReceiverProcessor#process(tdunnick.jphineas.xml.SoapXml, tdunnick.jphineas.mime.MimeContent[])
+	 * @see tdunnick.jphineas.receiver.ReceiverProcessor#process(tdunnick.jphineas.xml.SoapXml,
+	 *      tdunnick.jphineas.mime.MimeContent[])
 	 */
-	protected MimeContent process (SoapXml request, MimeContent[] parts)
-	{
-		EbXmlResponse pkg = new EbXmlResponse (config);
+	protected MimeContent process(SoapXml request, MimeContent[] parts) {
+		EbXmlResponse pkg = new EbXmlResponse(config);
 		//
-		PhineasQRow row = getRow (request);
 		// build a response package
-		MimeContent response = pkg.getMessagePackage (request, "Acknowledgment");
+		MimeContent response = pkg.getMessagePackage(request, "Acknowledgment");
 		// build an acknowledgement part
-		EbXmlAppResponse rsp = new EbXmlAppResponse ();
+		EbXmlAppResponse rsp = new EbXmlAppResponse();
 		// get decryption values
 		String password = config.getDecryptionPassword();
 		File cert = config.getDecryptionUnc();
-		if ((cert != null) && !cert.canRead())
-		{
-			Log.error ("Can't read certificate " + cert.getAbsolutePath());
+		if ((cert != null) && !cert.canRead()) {
+			Log.error("Can't read certificate " + cert.getAbsolutePath());
 			cert = null;
 		}
 		// and our destination directory
-  	String dir = config.getPayloadDirectory();
-  	int numParts = request.getNumParts();
-  	int part = request.getPart();
-  	String chunkid = request.getManifestChunkRequestId();
-  	File f = null;
+		String dir = config.getPayloadDirectory();
+		int numParts = request.getNumParts();
+		int part = request.getPart();
+		String chunkid = request.getManifestChunkRequestId();
+		File f = null;
 		// decode payloads and note their responses
-		for (int i = 1; i < parts.length; i++)
-		{
-			rsp.reset ();
-			EbXmlAttachment a = new EbXmlAttachment (parts[i]);
+		for (int i = 1; i < parts.length; i++) {
+			rsp.reset();
+			EbXmlAttachment a = new EbXmlAttachment(parts[i]);
 			// set destination for chunked vs. complete message...
 			if (numParts > 0)
 				f = Chunker.locate(chunkid, part);
 			else
-			  f = new File (dir + "/" + a.getName());
-	  	row.setPayloadName (a.getName());
-	  	row.setLocalFileName (f.getAbsolutePath());
-	  	// handle encryption
-	  	boolean encrypted = a.isEncrypted();
-	  	row.setEncryption(encrypted ? "yes" : "no");
-			if (encrypted && (cert != null))
-			{
-			  if (!a.decrypt (cert, password))
-			  {
-		  		String s = "Could not decrypt payload for " + a.getName();
-		  		Log.error (s);
-	    	  rsp.set ("abnormal", s, "failure");
-			  }
+				f = new File(dir + "/" + a.getName());
+			// handle encryption
+			boolean encrypted = a.isEncrypted();
+			if (encrypted && (cert != null)) {
+				if (!a.decrypt(cert, password)) {
+					String s = "Could not decrypt payload for " + a.getName();
+					Log.error(s);
+					rsp.set("abnormal", s, "failure");
+				}
 			}
 			// Log.debug("Saving payload to " + f.getAbsolutePath());
-			if (!a.savePayload(f))
-	  	{
-	  		String s = "Could not save payload for " + a.getName();
-	  		Log.error (s);
-    	  rsp.set ("abnormal", s, "failure");
-	  	}
-			setRowResponse (row, rsp);
-			response.addMultiPart(rsp.get ());
-			// check chunked requests for completed transport
-			if (numParts > 0)
-			{
-				// don't update our queue until all chunks are received!
-				if (Chunker.saved (chunkid) < numParts)
-					continue;
-				Log.debug("assembling " + numParts + " parts for " + a.getName ());
-				Chunker.assemble(new File (dir + "/" + a.getName()), chunkid);
+			if (!a.savePayload(f)) {
+				String s = "Could not save payload for " + a.getName();
+				Log.error(s);
+				rsp.set("abnormal", s, "failure");
 			}
-			row.append ();
+			response.addMultiPart(rsp.get());
+			// check chunked requests for completed transport
+			if (numParts > 0) {
+				// don't update our queue until all chunks are received!
+				if (Chunker.saved(chunkid) < numParts)
+					continue;
+				Log.debug("assembling " + numParts + " parts for " + a.getName());
+				Chunker.assemble(new File(dir + "/" + a.getName()), chunkid);
+			}
 		}
 		return response;
-	}
-	
-	/**
-	 * create and initialize a receiver row from a request
-	 * @param request soap envelope
-	 * @return a receiver row
-	 */
-	private PhineasQRow getRow (SoapXml request)
-	{
-		PhineasQRow row = queue.newRow();
-		row.setMessageId(request.getHdrMessageId());
-		row.setService(request.getService());
-		row.setAction(request.getAction());
-		row.setFromPartyId (request.getFromPartyId());
-		row.setMessageRecipient (request.getRecipient());
-		String s = request.getMetaData();
-		row.setArguments(s);
-		row.setProcessingStatus("queued");
-		s = DateFmt.getTimeStamp(null);
-		row.setReceivedTime (s);
-		row.setLastUpdateTime (s);		
-		return row;
-	}
-	
-	boolean setRowResponse (PhineasQRow row, EbXmlAppResponse rsp)
-	{
-		row.setErrorCode (rsp.getStatus());
-		row.setErrorMessage (rsp.getError());
-		row.setApplicationStatus(rsp.getAppData());
-		return true;
 	}
 }

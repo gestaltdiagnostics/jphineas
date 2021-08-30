@@ -11,4 +11,12 @@
 
 	<artifactId>jphineas-server</artifactId>
 	<name>jPhineas Server</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jphineas-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>
