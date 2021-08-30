@@ -96,9 +96,9 @@ public class Chunker {
 	 * @return the part or null if it fails
 	 */
 	static public byte[] getBytes(ByteBuffer buf, int chunk, int size) {
-		int loc = size * chunk;
+		int loc = size * (chunk - 1);
 		// return empty chunk when file is exhausted
-		if ((loc >= buf.limit()) || (loc < chunk)) {
+		if ((loc >= buf.limit()) || (loc < 0)) {
 			return new byte[0];
 		}
 
@@ -108,7 +108,7 @@ public class Chunker {
 		}
 
 		byte[] data = new byte[size];
-		buf.get(data, loc, size);
+		buf.get(data, 0, size);
 		return data;
 	}
 
