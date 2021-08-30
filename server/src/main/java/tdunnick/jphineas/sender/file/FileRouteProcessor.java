@@ -28,7 +28,7 @@ import tdunnick.jphineas.logging.Log;
 import tdunnick.jphineas.queue.PhineasQRow;
 import tdunnick.jphineas.sender.RouteProcessor;
 
-public class FileRouteProcessor extends RouteProcessor
+public class FileRouteProcessor //extends RouteProcessor
 {
 	private String host = null;
 	private String path = null;

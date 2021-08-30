@@ -122,17 +122,17 @@ public class QueueThread extends Pthread
 		}
  	  Log.debug("attempting to process message");
   	int retries = 0;
-  	while (running() && !route.getProcessor().process (r))
-  	{
-  		if ((route.getTimeout() < 1) || (retries++ >= route.getRetry()))
-  		{
-  			fail (r, "Retries expired for " + r.getRouteInfo());
-  			break;
-  		}
-  		// TODO exponential backoff???
-  		if (!psleep (route.getTimeout()))
-  			return false;
-   	}
+//  	while (running() && !route.getProcessor().process (r))
+//  	{
+//  		if ((route.getTimeout() < 1) || (retries++ >= route.getRetry()))
+//  		{
+//  			fail (r, "Retries expired for " + r.getRouteInfo());
+//  			break;
+//  		}
+//  		// TODO exponential backoff???
+//  		if (!psleep (route.getTimeout()))
+//  			return false;
+//   	}
 		r.setLastUpdateTime(DateFmt.getTimeStamp(null));
 		return (running() && (r.update() >= 0));
 	}
