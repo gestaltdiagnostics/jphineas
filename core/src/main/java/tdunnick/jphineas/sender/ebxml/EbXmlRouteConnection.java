@@ -22,6 +22,7 @@ package tdunnick.jphineas.sender.ebxml;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
@@ -29,76 +30,93 @@ import tdunnick.jphineas.config.RouteConfig;
 import tdunnick.jphineas.ebxml.EbXmlRequest;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.mime.MimeReceiver;
-import tdunnick.jphineas.sender.RouteProcessor;
 import tdunnick.jphineas.util.SocketFactory;
 import tdunnick.jphineas.xml.ResponseXml;
 import tdunnick.jphineas.xml.SoapXml;
 
 /**
- * This is the route processor for ebXML (standard PHINMS) outgoing messages. It
- * gets called from a QueueThread when a message is found to send. It uses the
- * Route's configuration, along with queue information to package the payload,
- * make a connection, and send the message. It updates the queue based on the
- * response (or lack of).
+ * This is the connection for sending ebXML (standard PHINMS) messages.
+ * It uses the Route's configuration to make a connection, and send the message.
  * 
  * @author user
  *
  */
-public class EbXmlRouteProcessor extends RouteProcessor {
+public class EbXmlRouteConnection {
 	private RouteConfig config = null;
+	private Socket socket = null;
+	private String basicAuthid = null;
+	private String basicPassword;
 
-	private static final Logger LOG = Logger.getLogger(EbXmlRouteProcessor.class);
+	private static final Logger LOG = Logger.getLogger(EbXmlRouteConnection.class);
 
-	public boolean configure(RouteConfig cfg) {
-		if ((this.config = cfg) == null)
-			return false;
-		return true;
+	public EbXmlRouteConnection(RouteConfig cfg) {
+		Objects.requireNonNull(cfg, "Route configuration cannot be null");
+		this.config = cfg;
+	}
+
+	public void open() {
+		if(socket == null) {
+			socket = SocketFactory.createSocket(config);
+			if (socket == null) {
+				LOG.error("Failed to open connection to " + config.getHost());
+			}
+		}
+		
+		// check for basic authentication
+		basicPassword = config.getAuthenticationType();
+		if ((basicPassword != null) && (basicPassword.equalsIgnoreCase("basic"))) {
+			basicAuthid = config.getAuthenticationId();
+			basicPassword = config.getAuthenticationPassword();
+		}
+	}
+
+	public void close() {
+		// if the remote closed the socket, then clean up
+		if (socket != null) {
+			try {
+				socket.close();
+			}
+			catch(Exception e) {
+				// ignore
+			}
+			socket = null;
+		}
+	}
+
+	public boolean isValid() {
+		boolean valid = false;
+		if(socket != null) {
+			valid = !(socket.isClosed() || socket.isInputShutdown() || socket.isOutputShutdown());
+		}
+		
+		return valid;
 	}
 
 	/**
-	 * The ebXML processor is responsible for sending an ebXML request, opening the
-	 * appropriate connection including any needed authentication, and processing
-	 * the response.
+	 * Sends the given message
 	 * 
 	 * @param req the message to send
 	 * @return ResponseXml if successful
-	 * @see tdunnick.jphineas.sender.RouteProcessor#process(tdunnick.jphineas.queue.PhineasQRow)
 	 */
-	public ResponseXml process(EbXmlRequest ebReq) {
+	public ResponseXml send(EbXmlRequest ebReq) {
 		ebReq.setRouteConfig(config);
 		ResponseXml xml = null;
 
 		// get a soap request for this row
 		SoapXml soap = ebReq.getSoapRequest();
-		// check for basic authentication
-		String authid = null;
-		String pw = config.getAuthenticationType();
-		if ((pw != null) && (pw.equalsIgnoreCase("basic"))) {
-			authid = config.getAuthenticationId();
-			pw = config.getAuthenticationPassword();
-		}
 		// build a request string...
 		String req = "POST " + config.getProtocol() + "://" + config.getHost() + ":" + config.getPort()
 				+ config.getPath() + " HTTP/1.1\r\n";
 
-		// now ready to send it off
-		Socket socket = null;
 		try {
 			MimeContent mime = null;
 			// send all chunks over the same connection
+			OutputStream out = socket.getOutputStream();
+			InputStream in = socket.getInputStream();
 			while ((mime = ebReq.getMessagePackage(soap)) != null) {
-				// set up a connection
-				if (socket == null) {
-					if ((socket = SocketFactory.createSocket(config)) == null) {
-						LOG.error("Failed to open connection to " + config.getHost());
-						break;
-					}
-				}
-				OutputStream out = socket.getOutputStream();
-				InputStream in = socket.getInputStream();
 				// insert BASIC authentication
-				if (authid != null) {
-					mime.setBasicAuth(authid, pw);
+				if (basicAuthid != null) {
+					mime.setBasicAuth(basicAuthid, basicPassword);
 				}
 				LOG.debug("sending EbXml request:\n" + req + mime.toString());
 				out.write(req.getBytes());
@@ -106,11 +124,6 @@ public class EbXmlRouteProcessor extends RouteProcessor {
 				out.flush();
 				LOG.debug("waiting for reply");
 				MimeContent msg = MimeReceiver.receive(in);
-				// if the remote closed the socket, then clean up
-				if (!socket.isConnected() || true) {
-					socket.close();
-					socket = null;
-				}
 				// then parse the reply and update our row
 				LOG.debug("response:\n" + msg.toString());
 				xml = ebReq.ParseMessagePackage(msg, soap.getHdrMessageId());
@@ -120,15 +133,6 @@ public class EbXmlRouteProcessor extends RouteProcessor {
 			}
 		} catch (Exception e) {
 			LOG.error("Failed sending EbXML message", e);
-		} finally {
-			// TODO digest authentication response?
-			if (socket != null) {
-				try {
-					socket.close();
-				} catch (Exception e) {
-					// ignore
-				}
-			}
 		}
 		return xml;
 	}

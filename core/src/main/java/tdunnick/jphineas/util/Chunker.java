@@ -97,7 +97,8 @@ public class Chunker {
 	 */
 	static public byte[] getBytes(ByteBuffer buf, int chunk, int size) {
 		int loc = size * (chunk - 1);
-		// return empty chunk when file is exhausted
+
+		// return empty chunk when location is invalid
 		if ((loc >= buf.limit()) || (loc < 0)) {
 			return new byte[0];
 		}
