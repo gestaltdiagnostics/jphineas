@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.security.Security;
+import java.util.Set;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -82,8 +84,7 @@ public class SocketFactory
 		 try
 		 {
 			 LOG.debug ("CA " + name + " " + password);
-		   KeyStore ks = KeyStore.getInstance ("JKS"); // assumes java keystore format
-		   ks.load (new FileInputStream (file), password.toCharArray());
+		   KeyStore ks = openKeystore(file, password.toCharArray());
 		   TrustManagerFactory tf = 
 		  	 TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 		   tf.init(ks);		   
@@ -138,10 +139,7 @@ public class SocketFactory
 					 return null;
 				 }
 
-				 KeyStore ks = KeyStore.getInstance("PKCS12"); // assumes PKCS format
-				 InputStream kin = new FileInputStream (cert);
-				 ks.load(kin, password.toCharArray());
-				 kin.close ();
+				 KeyStore ks = openKeystore(cert, password.toCharArray());
 				 KeyManagerFactory kf = KeyManagerFactory.getInstance("SunX509");
 				 kf.init(ks, password.toCharArray());
 				 km = kf.getKeyManagers();
@@ -162,5 +160,22 @@ public class SocketFactory
 					 + " - " + e.getMessage());
 			 return null;
 		 }	 		 
+	 }
+
+	 private static KeyStore openKeystore(File file, char[] password) {
+		 Set<String> algos = Security.getAlgorithms("KeyStore");
+		 KeyStore ks = null;
+		 for(String name : algos) {
+			 try(InputStream stream = new FileInputStream(file)) {
+				 ks = KeyStore.getInstance(name);
+				 ks.load(stream, password);
+				 break;
+			 }
+			 catch(Exception e) {
+				 // ignore
+			 }
+		 }
+
+		 return ks;
 	 }
 }
