@@ -10,18 +10,19 @@ import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.Security;
-import java.security.cert.CertPath;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+import org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.util.encoders.Hex;
-import org.bouncycastle.util.io.pem.PemObject;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -30,6 +31,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * @author Kiran Ayyagari (kayyagari@apache.org)
  */
 public class ClientCertAuthentication implements Authentication {
+
 	@XStreamAlias("Unc")
 	private String keystorePath;
 
@@ -38,6 +40,8 @@ public class ClientCertAuthentication implements Authentication {
 
 	@XStreamAlias("Type")
 	private String type = "clientcert";
+
+	public static final String ALIAS = "alias";
 
 	private static final Logger LOG = Logger.getLogger(ClientCertAuthentication.class);
 
@@ -50,10 +54,12 @@ public class ClientCertAuthentication implements Authentication {
 		return new ClientCertAuthentication(keystorePath, password);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static ClientCertAuthentication fromCertAndKeyInPemFormat(String cert, String key) {
-		CertPath cp = null;
+		List<X509Certificate> certs = null;
 		try {
-			cp = CertificateFactory.getInstance("X509").generateCertPath(new ByteArrayInputStream(cert.getBytes(StandardCharsets.UTF_8)));
+			Collection tmpCerts = new CertificateFactory().engineGenerateCertificates(new ByteArrayInputStream(cert.getBytes(StandardCharsets.UTF_8)));
+			certs = new ArrayList<>(tmpCerts);
 		}
 		catch(Exception e) {
 			LOG.warn("failed to parse certificate(s) from PEM content");
@@ -61,18 +67,7 @@ public class ClientCertAuthentication implements Authentication {
 			throw new RuntimeException(e);
 		}
 		
-		PEMParser parser = new PEMParser(new StringReader(key));
-		PemObject pemObj = null;
-		try {
-			pemObj = parser.readPemObject();
-		}
-		catch(Exception e) {
-			LOG.warn("failed to parse privatekey from PEM content");
-			LOG.warn("", e);
-			throw new RuntimeException(e);
-		}
-
-		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(pemObj.getContent());
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(parsePem(key));
 		Set<String> algos = Security.getAlgorithms("KeyFactory");
 
 		PrivateKey pk = null;
@@ -98,8 +93,7 @@ public class ClientCertAuthentication implements Authentication {
 			KeyStore ks = KeyStore.getInstance("JKS");
 			ks.load(null, null);
 			
-			List<? extends Certificate> certs = cp.getCertificates();
-			ks.setKeyEntry("alias", pk, null, (Certificate[])certs.toArray());
+			ks.setKeyEntry(ALIAS, pk, "".toCharArray(), (Certificate[])certs.toArray(new X509Certificate[certs.size()]));
 			
 			MessageDigest md = MessageDigest.getInstance("md5");
 			byte[] digest = md.digest(certs.get(0).getEncoded());
@@ -118,6 +112,26 @@ public class ClientCertAuthentication implements Authentication {
 		}
 
 		return new ClientCertAuthentication(f.getAbsolutePath(), password);
+	}
+
+	private static byte[] parsePem(String pemString) {
+		PEMParser parser = new PEMParser(new StringReader(pemString));
+		try {
+			return parser.readPemObject().getContent();
+		}
+		catch(Exception e) {
+			LOG.warn("failed to parse PEM content");
+			LOG.warn("", e);
+			throw new RuntimeException(e);
+		}
+
+	}
+	public String getKeystorePath() {
+		return keystorePath;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	public String getType() {
