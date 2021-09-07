@@ -1,6 +1,10 @@
 package tdunnick.jphineas.config.pojo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static tdunnick.jphineas.config.pojo.ClientCertAuthentication.ALIAS;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,6 +60,7 @@ public class RoutePojoConfigTest {
 		RouteConfig rc = route.toXmlConfig();
 		assertNotNull(rc);
 		
+		assertEquals("basic", ba.getType());
 		assertEquals(ba.getType(), rc.getAuthenticationType());
 		assertEquals(ba.getAuthId(), rc.getAuthenticationId());
 		assertEquals(ba.getPassword(), rc.getAuthenticationPassword());
@@ -113,8 +118,8 @@ public class RoutePojoConfigTest {
 		ks.load(stream, cca.getPassword().toCharArray());
 		stream.close();
 		
-		assertArrayEquals(certHolder.getEncoded(), ks.getCertificate(ClientCertAuthentication.ALIAS).getEncoded());
-		assertArrayEquals(encodedPrivateKey, ks.getKey(ClientCertAuthentication.ALIAS, "".toCharArray()).getEncoded());
+		assertArrayEquals(certHolder.getEncoded(), ks.getCertificate(ALIAS).getEncoded());
+		assertArrayEquals(encodedPrivateKey, ks.getKey(ALIAS, "".toCharArray()).getEncoded());
 	}
 	
 	private String toPem(String header, byte[] data) throws IOException {
