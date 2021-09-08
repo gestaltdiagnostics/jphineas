@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- receiver configuration -->
+<Receiver>
+	<!-- Default directory for file or folder references -->
+	<DefaultDirectory>/tmp/jphineas-it</DefaultDirectory>
+	<!-- a directory to receive payloads -->
+	<PayloadDirectory>data/incoming</PayloadDirectory>
+	<!-- a directory of client CPA's -->
+	<CpaDirectory>config/CPA</CpaDirectory>
+	<!-- ad directory of cached replies -->
+	<CacheDirectory>replies</CacheDirectory>
+	<!-- the services provided -->
+	<ServiceInfo>
+		<Service>
+			<Name>default</Name>
+			<Service>defaultservice</Service>
+			<Action>defaultaction</Action>
+			<Processor>Servlet</Processor>
+			<Filter />
+			<Decryption>
+				<Type>none</Type>
+				<Id />
+				<Password/>
+				<Unc/>
+			</Decryption>
+		</Service>
+		<Service>
+			<Name>Ping</Name>
+			<Service>urn:oasis:names:tc:ebxml-msg:service</Service>
+			<Action>Ping</Action>
+			<Processor>Ping</Processor>
+			<Filter />
+			<Decryption>
+				<Id />
+				<Type>none</Type>
+				<Unc />
+				<Password />
+			</Decryption>
+			<Directory />
+		</Service>
+		<ProcessorInfo>
+			<Processor>
+				<Name>Ping</Name>
+				<Class>tdunnick.jphineas.receiver.PingProcessor</Class>
+			</Processor>
+			<Processor>
+				<Name>Servlet</Name>
+				<Class>tdunnick.jphineas.receiver.ServletProcessor</Class>
+			</Processor>
+		</ProcessorInfo>
+		<FilterInfo>
+			<Filter>
+				<Name>None</Name>
+			</Filter>
+			<Filter>
+				<Name>Decrypt</Name>
+				<Class>tdunnick.jphineas.filter.DecryptorOutputFilter</Class>
+			</Filter>
+			<Filter>
+				<Name>Encrypt</Name>
+				<Class>tdunnick.jphineas.filter.EncryptorOutputFilter</Class>
+			</Filter>
+		</FilterInfo>
+	</ServiceInfo>
+</Receiver>

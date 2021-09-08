@@ -56,10 +56,9 @@ public class ClientCertAuthentication implements Authentication {
 
 	@SuppressWarnings("unchecked")
 	public static ClientCertAuthentication fromCertAndKeyInPemFormat(String cert, String key) {
-		List<X509Certificate> certs = null;
+		Collection certs = null;
 		try {
-			Collection tmpCerts = new CertificateFactory().engineGenerateCertificates(new ByteArrayInputStream(cert.getBytes(StandardCharsets.UTF_8)));
-			certs = new ArrayList<>(tmpCerts);
+			certs = new CertificateFactory().engineGenerateCertificates(new ByteArrayInputStream(cert.getBytes(StandardCharsets.UTF_8)));
 		}
 		catch(Exception e) {
 			LOG.warn("failed to parse certificate(s) from PEM content");
@@ -93,10 +92,11 @@ public class ClientCertAuthentication implements Authentication {
 			KeyStore ks = KeyStore.getInstance("JKS");
 			ks.load(null, null);
 			
-			ks.setKeyEntry(ALIAS, pk, "".toCharArray(), (Certificate[])certs.toArray(new X509Certificate[certs.size()]));
+			Certificate[] certArr = (Certificate[])certs.toArray(new X509Certificate[certs.size()]);
+			ks.setKeyEntry(ALIAS, pk, "".toCharArray(), certArr);
 			
 			MessageDigest md = MessageDigest.getInstance("md5");
-			byte[] digest = md.digest(certs.get(0).getEncoded());
+			byte[] digest = md.digest(certArr[0].getEncoded());
 			String hash = Hex.toHexString(digest);
 			f = File.createTempFile(hash, ".jks");
 			f.deleteOnExit();

@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import tdunnick.jphineas.common.JPhineas;
-import tdunnick.jphineas.config.PhineasConfig;
 import tdunnick.jphineas.config.ReceiverConfig;
 import tdunnick.jphineas.config.ServiceConfig;
 import tdunnick.jphineas.mime.MimeContent;
@@ -39,12 +38,11 @@ import tdunnick.jphineas.mime.MimeReceiver;
 import tdunnick.jphineas.xml.SoapXml;
 
 /**
- * jPhineas Receiver servlet.  Note that unlike the jPhineas Sender,  this only
- * services HTTP (ebXML) protocol requests.  Separate receivers will be needed,
- * either as independent threads started here, or from a separate servlet to manage
- * things like MLLP or sFTP.  Also, since this is a servlet, multi-threading is
- * handled by the J2EE container and we need only be concerned with thread safety (not
- * thread management as was needed by the sender).
+ * jPhineas Receiver servlet. This services HTTP (ebXML) protocol requests.
+ * Separate receivers will be needed, either as independent threads started here,
+ * or from a separate servlet to manage things like MLLP or sFTP.
+ * Also, since this is a servlet, multi-threading is handled by the J2EE container
+ * and we need only be concerned with thread safety (not thread management as was needed by the sender).
  * 
  * @author Thomas Dunnick
  * 
@@ -95,13 +93,13 @@ public class Receiver extends HttpServlet
 	  		new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
 		// get receiver's configuration
-	  PhineasConfig p = new PhineasConfig ();
-		if (!p.load(new File (configName)))
+		ReceiverConfig config = new ReceiverConfig();
+		if (!config.load(new File (configName)))
 		{
 			status = "failed loading " + configName;
 			return false;
 		}
-		ReceiverConfig config = p.getReceiver();
+
 		LOG.info("Receiver starting...");
 		// CPA folder and reply cache
 		cpadir = config.getCpaDirectory();
