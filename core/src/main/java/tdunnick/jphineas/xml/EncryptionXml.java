@@ -23,7 +23,7 @@ package tdunnick.jphineas.xml;
  * This manages the encryption envelope XML.  It is identified by the Mime
  * part where the Content-ID matches the ebXML Manifest Reference href attribute.
  * (whew!).  However, it is probably sufficient to look for 
- * "Content-Disposition: attachement".
+ * "Content-Disposition: attachment".
  * 
  * @author Thomas Dunnick
  *

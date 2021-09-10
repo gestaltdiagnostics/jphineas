@@ -109,7 +109,7 @@ public class EbXmlAttachment
 			return null;
 		MimeContent mime = new MimeContent ();
 		mime.setContentId (id);
-		mime.setDisposition ("attachement; name=\"" + name + "\"");
+		mime.setDisposition ("attachment; name=\"" + name + "\"");
 		// encodeBody() will set content type and encoding
 		mime.encodeBody(payload);
 		return mime;
