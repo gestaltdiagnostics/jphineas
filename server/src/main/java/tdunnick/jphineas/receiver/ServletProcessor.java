@@ -57,12 +57,6 @@ public class ServletProcessor extends ReceiverProcessor
 	protected boolean configure(ServiceConfig config)
 	{
 		this.config = config;
-		String s = config.getQueue();
-		if (s == null)
-		{
-			LOG.error ("Receiver Queue not specified");
-			return false;
-		}
 		return true;
 	}
 
