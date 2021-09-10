@@ -2,7 +2,7 @@
 <!-- receiver configuration -->
 <Receiver>
 	<!-- Default directory for file or folder references -->
-	<DefaultDirectory>/tmp/jphineas-it</DefaultDirectory>
+	<DefaultDirectory>will-be-replaced-at-runtime</DefaultDirectory>
 	<!-- a directory to receive payloads -->
 	<PayloadDirectory>data/incoming</PayloadDirectory>
 	<!-- a directory of client CPA's -->
@@ -15,7 +15,7 @@
 			<Name>default</Name>
 			<Service>defaultservice</Service>
 			<Action>defaultaction</Action>
-			<Processor>Servlet</Processor>
+			<Processor>File</Processor>
 			<Filter />
 			<Decryption>
 				<Type>none</Type>
@@ -40,12 +40,12 @@
 		</Service>
 		<ProcessorInfo>
 			<Processor>
-				<Name>Ping</Name>
-				<Class>tdunnick.jphineas.receiver.PingProcessor</Class>
+  		        <Name>File</Name>
+		        <Class>tdunnick.jphineas.receiver.PayloadProcessor</Class>
 			</Processor>
 			<Processor>
-				<Name>Servlet</Name>
-				<Class>tdunnick.jphineas.receiver.ServletProcessor</Class>
+				<Name>Ping</Name>
+				<Class>tdunnick.jphineas.receiver.PingProcessor</Class>
 			</Processor>
 		</ProcessorInfo>
 		<FilterInfo>
