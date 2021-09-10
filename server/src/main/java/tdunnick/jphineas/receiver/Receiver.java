@@ -211,7 +211,7 @@ public class Receiver extends HttpServlet
 		if (!cpa.exists ())
 		{
 			// TODO no such CPA
-			return serverError (resp, "CPA " + soap.getCPAId() + " not found");
+			//return serverError (resp, "CPA " + soap.getCPAId() + " not found");
 		}
   	try
 		{
@@ -286,7 +286,7 @@ public class Receiver extends HttpServlet
 	 */
 	public void init() throws ServletException
 	{
-	  configName = getServletContext().getInitParameter("Configuration");
+	  configName = getInitParameter("Configuration");
 		if (!startup ())
 		{
 			throw (new ServletException ("Fatal error: error initializing jPhineas Receiver"));

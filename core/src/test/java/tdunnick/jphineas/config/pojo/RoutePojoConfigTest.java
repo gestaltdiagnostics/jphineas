@@ -76,6 +76,6 @@ public class RoutePojoConfigTest {
 		stream.close();
 		
 		assertArrayEquals(ckp.getCertificate(), ks.getCertificate(ALIAS).getEncoded());
-		assertArrayEquals(ckp.getPrivateKey(), ks.getKey(ALIAS, "".toCharArray()).getEncoded());
+		assertArrayEquals(ckp.getPrivateKey(), ks.getKey(ALIAS, cca.getPassword().toCharArray()).getEncoded());
 	}
 }

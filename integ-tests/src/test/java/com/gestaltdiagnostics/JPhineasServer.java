@@ -22,13 +22,19 @@ public class JPhineasServer {
 	private int port;
 	private boolean needClientAuth;
 	private KeyStore ks;
+	private KeyStore ts;
+	private File tmpDir;
+	private String keystorePassword;
 
-	private static final String RECEIVER_PATH = "/receiver";
+	public static final String RECEIVER_PATH = "/receiver";
 
-	public JPhineasServer(int port, boolean needClientAuth, KeyStore ks) {
+	public JPhineasServer(int port, boolean needClientAuth, KeyStore ks, KeyStore ts, String keystorePassword, File tmpDir) {
 		this.port = port;
 		this.needClientAuth = needClientAuth;
 		this.ks = ks;
+		this.ts = ts;
+		this.tmpDir = tmpDir;
+		this.keystorePassword = keystorePassword;
 	}
 
 	public void start() {
@@ -39,9 +45,9 @@ public class JPhineasServer {
 		SslContextFactory.Server sslFactory = new SslContextFactory.Server();
 		sslFactory.setNeedClientAuth(needClientAuth);
 		sslFactory.setKeyStore(ks);
-		sslFactory.setKeyStorePassword("");
-		sslFactory.setTrustStore(ks);
-		sslFactory.setTrustStorePassword("");
+		sslFactory.setKeyStorePassword(keystorePassword);
+		sslFactory.setTrustStore(ts);
+		sslFactory.setTrustStorePassword(keystorePassword);
 
 		ServerConnector connector = new ServerConnector(server, sslFactory);
 		connector.setHost("localhost");
@@ -82,18 +88,26 @@ public class JPhineasServer {
 		try {
 			InputStream stream = getClass().getClassLoader().getResourceAsStream(resourceName);
 
+			// first load the stock config (this doesn't contain a default directory)
 			ReceiverConfig rc = new ReceiverConfig();
-			boolean loaded = rc.load(stream);
+			rc.load(stream);
+			stream.close();
+
+			// then set the temporary folder as the default directory
+			rc.setDefaultDir(tmpDir);
+
+			// and save
+			File f = new File(tmpDir, "receiver.xml");
+			rc.save(f);
+
+			// finally reload. Now, the new temp directory is in use.
+			rc = new ReceiverConfig();
+			boolean loaded = rc.load(f);
 			if(!loaded) {
 				throw new IllegalStateException("failed to load the receiver configuration");
 			}
 
-			stream.close();
-
-			File f = File.createTempFile("receiver", "xml");
-			f.deleteOnExit();
-			rc.save(f);
-			
+			System.out.println(rc.getPayloadDirectory());
 			return f.getAbsolutePath();
 		}
 		catch(Exception e) {
