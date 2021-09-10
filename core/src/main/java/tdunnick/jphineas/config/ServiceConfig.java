@@ -35,7 +35,7 @@ public class ServiceConfig extends ReceiverConfig
 			return false;
 		String[] tags = 
 		{ 
-			"Name", "Service", "Processor", "Action", "Queue"
+			"Name", "Service", "Processor", "Action"
 		};
 		for (int i = 0; i < tags.length; i++)
 		{
