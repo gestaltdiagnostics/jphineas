@@ -78,7 +78,7 @@ public class EbXmlResponse
 		SoapXml soap = new SoapXml ();
 		soap.setFromPartyId (request.getToPartyId());
 		soap.setToPartyId (request.getFromPartyId());
-		soap.setCPAId ("");
+		soap.setCPAId (request.getCPAId());
 		soap.setConversationId (request.getConversationId());
 		soap.setService ("urn:oasis:names:tc:ebxml-msg:service");
 		soap.setAction (action);
