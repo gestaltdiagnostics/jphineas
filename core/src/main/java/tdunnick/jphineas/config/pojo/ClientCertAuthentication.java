@@ -93,7 +93,7 @@ public class ClientCertAuthentication implements Authentication {
 			ks.load(null, null);
 			
 			Certificate[] certArr = (Certificate[])certs.toArray(new X509Certificate[certs.size()]);
-			ks.setKeyEntry(ALIAS, pk, "".toCharArray(), certArr);
+			ks.setKeyEntry(ALIAS, pk, password.toCharArray(), certArr);
 			
 			MessageDigest md = MessageDigest.getInstance("md5");
 			byte[] digest = md.digest(certArr[0].getEncoded());

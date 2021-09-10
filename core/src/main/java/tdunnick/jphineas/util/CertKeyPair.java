@@ -51,7 +51,6 @@ public class CertKeyPair {
 	public static CertKeyPair generate() {
 		try {
 			X500Name subject = new X500Name("CN=localhost,OU=dev,O=GestaltDiagnostics,O=US");
-			X500Name issuer = new X500Name("CN=kayyagari,OU=dev,O=GestaltDiagnostics,O=US");
 			Date notBefore = new Date();
 			long yearInMillis = (60 * 60 * 24 * 365 * 1000L);
 			Date notAfter = new Date(notBefore.getTime() + (10 * yearInMillis));
@@ -64,7 +63,7 @@ public class CertKeyPair {
 			AsymmetricCipherKeyPair ackp = rpg.generateKeyPair();
 			
 			SubjectPublicKeyInfo spki = SubjectPublicKeyInfoFactory.createSubjectPublicKeyInfo(ackp.getPublic());
-			X509v3CertificateBuilder builder = new X509v3CertificateBuilder(issuer, serial, notBefore, notAfter, subject, spki);
+			X509v3CertificateBuilder builder = new X509v3CertificateBuilder(subject, serial, notBefore, notAfter, subject, spki);
 			
 			AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
 			AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
@@ -81,7 +80,7 @@ public class CertKeyPair {
 	}
 
 	@SuppressWarnings("unchecked")
-	public KeyStore toJKS(String alias) {
+	public KeyStore toJKS(String alias, String password) {
 		try {
 			Collection certs = new CertificateFactory().engineGenerateCertificates(new ByteArrayInputStream(certificate));
 			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKey);
@@ -89,9 +88,9 @@ public class CertKeyPair {
 			PrivateKey pk = kf.generatePrivate(keySpec);
 
 			KeyStore ks = KeyStore.getInstance("JKS");
-			ks.load(null, null);
+			ks.load(null, password.toCharArray());
 			
-			ks.setKeyEntry(alias, pk, "".toCharArray(), new Certificate[] { (Certificate)certs.iterator().next()});
+			ks.setKeyEntry(alias, pk, password.toCharArray(), new Certificate[] { (Certificate)certs.iterator().next()});
 			
 			return ks;
 		}
