@@ -27,6 +27,7 @@ import java.util.Objects;
 import org.apache.log4j.Logger;
 
 import tdunnick.jphineas.config.RouteConfig;
+import tdunnick.jphineas.config.pojo.Route;
 import tdunnick.jphineas.ebxml.EbXmlRequest;
 import tdunnick.jphineas.mime.MimeContent;
 import tdunnick.jphineas.mime.MimeReceiver;
@@ -49,9 +50,9 @@ public class EbXmlRouteConnection {
 
 	private static final Logger LOG = Logger.getLogger(EbXmlRouteConnection.class);
 
-	public EbXmlRouteConnection(RouteConfig cfg) {
+	public EbXmlRouteConnection(Route cfg) {
 		Objects.requireNonNull(cfg, "Route configuration cannot be null");
-		this.config = cfg;
+		this.config = cfg.toXmlConfig();
 	}
 
 	public void open() {
@@ -113,7 +114,9 @@ public class EbXmlRouteConnection {
 			// send all chunks over the same connection
 			OutputStream out = socket.getOutputStream();
 			InputStream in = socket.getInputStream();
+			int count = 1;
 			while ((mime = ebReq.getMessagePackage(soap)) != null) {
+				System.out.println(count++);
 				// insert BASIC authentication
 				if (basicAuthid != null) {
 					mime.setBasicAuth(basicAuthid, basicPassword);

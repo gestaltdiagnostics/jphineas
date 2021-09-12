@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import org.junit.rules.TemporaryFolder;
 
 import tdunnick.jphineas.config.RouteConfig;
@@ -34,7 +35,7 @@ public class SenderIntegrationTest {
 	private static File serverKeystoreFile;
 
 	private static String keystorePassword = "changeit";
-	private static RouteConfig rc;
+	private static Route route;
 
 	@BeforeClass
 	public static void setup() throws Exception {
@@ -54,7 +55,7 @@ public class SenderIntegrationTest {
 		server = new JPhineasServer(port, true, serverKeystore, clientKeystore, keystorePassword, tmpDir);
 		server.start();
 
-		Route route = new Route();
+	    route = new Route();
 		ClientCertAuthentication ca = ClientCertAuthentication.fromCertAndKeyInPemFormat(clientKeypair.getCertificateEncoded(), clientKeypair.getPrivateKeyEncoded());
 		route.setAuthentication(ca);
 		route.setChunkSize(0);
@@ -69,10 +70,6 @@ public class SenderIntegrationTest {
 		route.setTimeout(0);
 		route.setTrustStore(serverKeystoreFile.getAbsolutePath());
 		route.setTrustStorePassword(keystorePassword);
-
-		rc = route.toXmlConfig();
-
-		System.out.println(rc);
 	}
 
 	@AfterClass
@@ -82,7 +79,6 @@ public class SenderIntegrationTest {
 	
 	@Test
 	public void testSending() {
-		System.out.println(server.getReceiverUrl());
 		String service = "defaultservice";
 		String action = "defaultaction";
 		String recordId = UUID.randomUUID().toString();
@@ -91,11 +87,34 @@ public class SenderIntegrationTest {
 		String certificateUrl = "";
 		String message = "hello";
 
-		EbXmlRouteConnection conn = new EbXmlRouteConnection(rc);
+		route.setChunkSize(0);
+		EbXmlRouteConnection conn = new EbXmlRouteConnection(route);
 		conn.open();
 		EbXmlRequest req = new EbXmlRequest(service, action, recordId, arguments, messageRecipient, certificateUrl, message);
 		ResponseXml resp = conn.send(req);
-		System.out.println(resp);
+		assertNotNull(resp);
+		assertTrue(resp.ok());
+		conn.close();
+	}
+
+	@Test
+	public void testSendingWithChunking() {
+		String service = "defaultservice";
+		String action = "defaultaction";
+		String recordId = UUID.randomUUID().toString();
+		String arguments = "";
+		String messageRecipient = "test-server";
+		String certificateUrl = "";
+		String message = "this is a message"; // a message with 17 bytes
+		
+		route.setChunkSize(8); // should result in 3 chunks
+		EbXmlRouteConnection conn = new EbXmlRouteConnection(route);
+		conn.open();
+		EbXmlRequest req = new EbXmlRequest(service, action, recordId, arguments, messageRecipient, certificateUrl, message);
+		ResponseXml resp = conn.send(req);
+		System.out.println("----->\n" + resp);
+		assertNotNull(resp);
+		assertTrue(resp.ok());
 		conn.close();
 	}
 }
