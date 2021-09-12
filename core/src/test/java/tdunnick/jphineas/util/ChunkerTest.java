@@ -28,7 +28,7 @@ public class ChunkerTest {
 		chunkSize = data.length;
 		needed = Chunker.needed(buf, chunkSize);
 		assertEquals(1, needed);
-		part = Chunker.getBytes(buf, 1, chunkSize);
+		part = Chunker.getBytes(buf, 0, chunkSize);
 		assertArrayEquals(data, part);
 		
 		buf.flip();
@@ -37,17 +37,17 @@ public class ChunkerTest {
 		assertEquals(3, needed);
 		
 		// check the chunks based on the above chunkSize
-		part = Chunker.getBytes(buf, 1, chunkSize);
+		part = Chunker.getBytes(buf, 0, chunkSize);
 		byte[] chunk = new byte[chunkSize];
 		System.arraycopy(data, 0, chunk, 0, chunkSize);
 		assertArrayEquals(chunk, part);
 		
-		part = Chunker.getBytes(buf, 2, chunkSize);
+		part = Chunker.getBytes(buf, 1, chunkSize);
 		chunk = new byte[chunkSize];
 		System.arraycopy(data, 8, chunk, 0, chunkSize);
 		assertArrayEquals(chunk, part);
 		
-		part = Chunker.getBytes(buf, 3, chunkSize);
+		part = Chunker.getBytes(buf, 2, chunkSize);
 		assertEquals(data[data.length - 1], part[0]);
 	}
 }
