@@ -283,7 +283,7 @@ public class EbXmlRequest {
 			return resp;
 		}
 		// well, we really only expect one for now...
-		resp = new ResponseXml(parts[0].getBody());
+		resp = new ResponseXml(parts[1].getBody());
 		return resp;
 	}
 
