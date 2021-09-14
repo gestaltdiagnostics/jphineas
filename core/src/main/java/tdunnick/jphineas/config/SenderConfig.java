@@ -19,28 +19,14 @@
 
 package tdunnick.jphineas.config;
 
-import org.apache.log4j.Logger;
-
 public class SenderConfig extends PhineasConfig
 {
 	private final static String mapPath = "MapInfo.Map";
 	private final static String routePath = "RouteInfo.Route";
 	
-	private static final Logger LOG = Logger.getLogger(SenderConfig.class);
-
 	boolean init ()
 	{
-		// LOG.debug ("initialzing SenderConfig");
-		if (!super.init ())
-			return false;
-		if (forceFolder ("QueueDirectory", System.getProperty ("java.io.tmpdir")) == null)
-		{
-			LOG.error("Can't force QueueDirectory");
-			return false;
-		}
-		if (forceFolder ("CpaDirectory", "CPA/") == null)
-		{
-			LOG.error("Can't force CpaDirectory");
+		if (!super.init ()) {
 			return false;
 		}
 		return true;
