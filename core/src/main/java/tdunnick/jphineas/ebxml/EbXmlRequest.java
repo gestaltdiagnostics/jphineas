@@ -204,6 +204,9 @@ public class EbXmlRequest {
 	 * @return the Mime encoded payload
 	 */
 	private MimeContent getPayloadContainer(SoapXml soap) {
+		if(messageContent.position() == messageContent.limit()) {
+			return null;
+		}
 		// if all done chunking, then do nothing
 		if (soap.getPart() + 1 == soap.getNumParts()) {
 			return null;
@@ -234,7 +237,7 @@ public class EbXmlRequest {
 	 */
 	public MimeContent getMessagePackage(SoapXml soap) {
 		MimeContent mimeContent = null;
-		if ((messageContent != null) && ((mimeContent = getPayloadContainer(soap)) == null)) {
+		if ((mimeContent = getPayloadContainer(soap)) == null) {
 			return null;
 		}
 		MimeContent hdr = getHeaderContainer(soap);
