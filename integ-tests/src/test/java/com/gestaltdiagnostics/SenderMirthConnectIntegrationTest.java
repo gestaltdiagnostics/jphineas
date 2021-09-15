@@ -22,6 +22,14 @@ import com.mirth.connect.util.ConfigurationProperty;
 
 import tdunnick.jphineas.xml.ResponseXml;
 
+/**
+ * Integration test using MirthConnect.
+ *
+ * Note: Before executing this test make sure the MirthConect installer tarball is available in
+ * the local Maven repo. If it is not available please execute <i>upload-mc-to-maven.sh</i> script first.
+ *
+ * @author Kiran Ayyagari (kayyagari@apache.org)
+ */
 public class SenderMirthConnectIntegrationTest extends IntegrationTestBase {
 	private MirthConnectServer mcServer;
 	private Client mcClient;
