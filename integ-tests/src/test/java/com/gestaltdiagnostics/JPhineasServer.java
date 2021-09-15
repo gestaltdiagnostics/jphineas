@@ -1,9 +1,14 @@
 package com.gestaltdiagnostics;
 
+import static com.gestaltdiagnostics.IntegrationTestBase.JPHINEAS_SERVER_PORT;
+import static com.gestaltdiagnostics.IntegrationTestBase.KEYSTORE_PASSWORD;
+import static com.gestaltdiagnostics.IntegrationTestBase.openKeystore;
+
 import java.io.File;
 import java.io.InputStream;
 import java.security.KeyStore;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -28,6 +33,8 @@ public class JPhineasServer {
 
 	public static final String RECEIVER_PATH = "/receiver";
 
+	private static final Logger LOG = Logger.getLogger(JPhineasServer.class);
+	
 	public JPhineasServer(int port, boolean needClientAuth, KeyStore ks, KeyStore ts, String keystorePassword, File tmpDir) {
 		this.port = port;
 		this.needClientAuth = needClientAuth;
@@ -63,6 +70,7 @@ public class JPhineasServer {
 		
 		try {
 			server.start();
+			System.out.println("jPhineas receiver started");
 		}
 		catch(Exception e) {
 			throw new RuntimeException(e);
@@ -113,5 +121,13 @@ public class JPhineasServer {
 		catch(Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static void main(String[] args) {
+		KeyStore clientKeystore = openKeystore("client.jks", KEYSTORE_PASSWORD);
+		KeyStore serverKeystore = openKeystore("server.jks", KEYSTORE_PASSWORD);
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		JPhineasServer server = new JPhineasServer(JPHINEAS_SERVER_PORT, true, serverKeystore, clientKeystore, KEYSTORE_PASSWORD, tmpDir);
+		server.start();
 	}
 }

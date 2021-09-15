@@ -12,11 +12,152 @@
 	<artifactId>jphineas-integ-tests</artifactId>
 	<name>jPhineas Integration Tests</name>
 
+    <properties>
+      <mc.version>3.11.0</mc.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>mirth-libs</id>
+            <url>https://nexus.kaurpalang.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jphineas-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.mirth.connect</groupId>
+            <artifactId>mirth-client-core</artifactId>
+            <version>${mc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mirth.connect</groupId>
+            <artifactId>donkey-server</artifactId>
+            <version>${mc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mirth.connect</groupId>
+            <artifactId>mirth-crypto</artifactId>
+            <version>${mc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.22.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>2.22.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ogce</groupId>
+            <artifactId>xpp3</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mozilla</groupId>
+            <artifactId>rhino</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.12</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mirth.connect.connectors</groupId>
+            <artifactId>http-shared</artifactId>
+            <version>${mc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.odysseus.staxon</groupId>
+            <artifactId>staxon</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mirth.connect.plugins.datatypes</groupId>
+            <artifactId>datatype-raw-shared</artifactId>
+            <version>${mc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mirth.connect.connectors</groupId>
+            <artifactId>js-shared</artifactId>
+            <version>${mc.version}</version>
+        </dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<!-- unpack MC first -->
+								<artifactItem>
+									<groupId>com.mirth.connect</groupId>
+									<artifactId>mirthconnect-archive</artifactId>
+									<version>${mc.version}</version>
+									<type>tar.gz</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeArtifactIds>jphineas-core</includeArtifactIds>
+							<!-- DO NOT introduce line breaks in the outputDirectory's value. 
+								Please double check after formatting -->
+							<outputDirectory>${project.build.directory}/Mirth Connect/server-lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
